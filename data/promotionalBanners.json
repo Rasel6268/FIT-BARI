@@ -1,0 +1,51 @@
+[
+  {
+    "id": "banner-1",
+    "title": "Power Up Your Workout",
+    "subtitle": "Fuel Max Performance & Lean Muscle",
+    "highlight": "FLAT 15% OFF",
+    "description": "Premium authentic Whey Isolate, Creatine & BCAAs to supercharge your strength and accelerate post-workout recovery.",
+    "ctaText": "Shop Supplements",
+    "ctaLink": "/category/gym-supplements",
+    "image": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80",
+    "bgColor": "bg-[#173F35]",
+    "badge": "Authentic Formula"
+  },
+  {
+    "id": "banner-2",
+    "title": "Natural Nutrition, Better Living",
+    "subtitle": "Raw Honey & Super Seeds",
+    "highlight": "PURE HARVEST",
+    "description": "Pure unheated Sundarban honey, organic Peruvian chia seeds, and raw almonds delivered direct to your doorstep.",
+    "ctaText": "Discover Pure Foods",
+    "ctaLink": "/category/healthy-foods",
+    "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=900&q=80",
+    "bgColor": "bg-[#215346]",
+    "badge": "100% Unprocessed"
+  },
+  {
+    "id": "banner-3",
+    "title": "Healthy Combo Packages",
+    "subtitle": "Curated Bundles For Your Goals",
+    "highlight": "SAVE UP TO 25%",
+    "description": "Specially designed wellness and gym packs that maximize your daily nutrition while saving extra on every order.",
+    "ctaText": "Explore Combos",
+    "ctaLink": "/category/combo-packages",
+    "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=80",
+    "bgColor": "bg-[#1A453A]",
+    "badge": "Best Value"
+  },
+  {
+    "id": "banner-4",
+    "title": "Exclusive Deals This Week",
+    "subtitle": "Limited Stock Flash Sale",
+    "highlight": "FREE SHIPPING",
+    "description": "Enjoy complimentary nationwide delivery on orders over ৳2000 plus free gift with selected health bundles.",
+    "ctaText": "Grab Deals Now",
+    "ctaLink": "/shop",
+    "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=900&q=80",
+    "bgColor": "bg-[#14372E]",
+    "badge": "Limited Time"
+  }
+]
+

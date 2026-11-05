@@ -1,0 +1,88 @@
+{
+  "mainNav": [
+    { "name": "Home", "href": "/" },
+    { "name": "Shop", "href": "/shop" },
+    { "name": "Gym Supplements", "href": "/category/gym-supplements", "badge": "Popular" },
+    { "name": "Healthy Foods", "href": "/category/healthy-foods" },
+    { "name": "Combos", "href": "/category/combo-packages", "badge": "Save 25%" },
+    { "name": "About Us", "href": "/about" },
+    { "name": "Contact", "href": "/contact" }
+  ],
+  "categoriesDropdown": [
+    {
+      "name": "Honey",
+      "slug": "honey",
+      "description": "Pure raw Sundarban & Mustard honey",
+      "icon": "droplet"
+    },
+    {
+      "name": "Gym Supplements",
+      "slug": "gym-supplements",
+      "description": "Whey protein, creatine, BCAAs & pre-workout",
+      "icon": "dumbbell"
+    },
+    {
+      "name": "Oats & Seeds",
+      "slug": "oats-seeds",
+      "description": "Chia seeds, rolled oats, flax seeds & pumpkin seeds",
+      "icon": "wheat"
+    },
+    {
+      "name": "Nuts & Dry Fruits",
+      "slug": "nuts-dry-fruits",
+      "description": "Almonds, cashews, walnuts & pistachios",
+      "icon": "nut"
+    },
+    {
+      "name": "Healthy Foods",
+      "slug": "healthy-foods",
+      "description": "Peanut butter, granola, stevia & herbal tea",
+      "icon": "apple"
+    },
+    {
+      "name": "Ghee & Natural Oils",
+      "slug": "ghee-natural-oils",
+      "description": "Grass-fed cow ghee, olive oil & black seed oil",
+      "icon": "flask-round"
+    },
+    {
+      "name": "Dates & Superfoods",
+      "slug": "dates-superfoods",
+      "description": "Ajwa dates, medjool dates & moringa powder",
+      "icon": "sparkles"
+    },
+    {
+      "name": "Combo Packages",
+      "slug": "combo-packages",
+      "description": "Curated bundles with maximum value",
+      "icon": "package"
+    }
+  ],
+  "footerNav": {
+    "quickLinks": [
+      { "name": "Shop All Products", "href": "/shop" },
+      { "name": "Best Seller Combos", "href": "/category/combo-packages" },
+      { "name": "Why Choose FIT BARI", "href": "/about#why-us" },
+      { "name": "Nutrition & Fitness Blog", "href": "/#fitness-nutrition" },
+      { "name": "Track Your Order", "href": "/contact" },
+      { "name": "Customer Reviews", "href": "/#reviews" }
+    ],
+    "categories": [
+      { "name": "Gym Supplements", "href": "/category/gym-supplements" },
+      { "name": "Pure Raw Honey", "href": "/category/honey" },
+      { "name": "Oats, Chia & Seeds", "href": "/category/oats-seeds" },
+      { "name": "Nuts & Dry Fruits", "href": "/category/nuts-dry-fruits" },
+      { "name": "Ajwa Dates & Superfoods", "href": "/category/dates-superfoods" },
+      { "name": "Pure Ghee & Black Seed Oil", "href": "/category/ghee-natural-oils" }
+    ],
+    "customerCare": [
+      { "name": "Contact & Support", "href": "/contact" },
+      { "name": "Frequently Asked Questions", "href": "/about#faq" },
+      { "name": "Delivery Policy & Rates", "href": "/about#shipping" },
+      { "name": "Return & Replacement Policy", "href": "/about#returns" },
+      { "name": "Authenticity Guarantee", "href": "/about#authenticity" },
+      { "name": "Privacy Policy", "href": "/about#privacy" }
+    ]
+  }
+}
+

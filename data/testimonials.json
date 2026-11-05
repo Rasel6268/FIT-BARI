@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Tanvir Hasan",
+    "role": "Strength & Conditioning Coach, Gulshan",
+    "rating": 5,
+    "review": "Finding genuine imported whey in Dhaka without worrying about counterfeit batches was nearly impossible. The verifiable hologram seals, pristine solubility, and easy digestion of FIT BARI's supplements make them our team's standard recommendation."
+  },
+  {
+    "id": 2,
+    "name": "Dr. Nusrat Jahan",
+    "role": "Clinical Dietitian, Dhanmondi",
+    "rating": 5,
+    "review": "Most commercial honey sold in supermarkets fails the HMF purity test due to industrial boiling. FIT BARI's raw Sundarban honey preserves natural live bee pollens and enzymes. I confidently prescribe it to my patients managing metabolic health."
+  },
+  {
+    "id": 3,
+    "name": "Mahmudur Rahman",
+    "role": "Software Architect, Uttara",
+    "rating": 5,
+    "review": "Replaced processed bread and sugary breakfasts with the rolled oats, chia seeds, and raw honey stack. The difference in mental clarity and midday sustained energy during long engineering sessions has been remarkable."
+  },
+  {
+    "id": 4,
+    "name": "Farhana Kabir",
+    "role": "Yoga Practitioner & Parent, Banani",
+    "rating": 5,
+    "review": "The rich, granular texture and authentic nutty aroma of the cultured Bilona ghee reminded me of pure village harvest. Excellent packaging and next-day delivery straight to our door in Banani."
+  }
+]
