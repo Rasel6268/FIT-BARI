@@ -6,7 +6,7 @@
     "sublabel": "Wild Sundarban & Mustard Blossom",
     "description": "Cold-harvested unheated raw honey rich in active live enzymes, bee pollen, and deep floral terroir.",
     "productCount": 6,
-    "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/honey-harvest.png",
     "editorialSize": "large",
     "aspect": "aspect-[3/4]"
   },
@@ -17,7 +17,7 @@
     "sublabel": "Clean Whey, Creatine & Recovery",
     "description": "Third-party tested protein isolates, micronized creatine, and pure amino acids for peak strength.",
     "productCount": 8,
-    "image": "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/gym-supplements.png",
     "editorialSize": "medium",
     "aspect": "aspect-[4/5]"
   },
@@ -28,7 +28,7 @@
     "sublabel": "Peruvian Chia & Australian Oats",
     "description": "Beta-glucan rich wholegrains and cold-stored organic seeds packed with plant Omega-3 fatty acids.",
     "productCount": 7,
-    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/oats-seeds.png",
     "editorialSize": "medium",
     "aspect": "aspect-[4/5]"
   },
@@ -39,7 +39,7 @@
     "sublabel": "California Whole Almonds & Cashews",
     "description": "Crisp whole kernels and sun-cured dry fruits packed with essential minerals and natural Vitamin E.",
     "productCount": 6,
-    "image": "https://images.unsplash.com/photo-1508061252445-5350f3ab0a55?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/nuts-dry-fruits.png",
     "editorialSize": "wide",
     "aspect": "aspect-[16/10]"
   },
@@ -50,7 +50,7 @@
     "sublabel": "Natural Peanut Butter & Granola",
     "description": "Zero added sugar nut butters, whole rolled grain granola, and botanical teas crafted for clean everyday living.",
     "productCount": 8,
-    "image": "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/healthy-foods.png",
     "editorialSize": "medium",
     "aspect": "aspect-[4/5]"
   },
@@ -61,7 +61,7 @@
     "sublabel": "Traditional Bilona & Black Seed Oil",
     "description": "Granular grass-fed cow ghee and virgin cold-pressed Nigella Sativa oil rich in Thymoquinone.",
     "productCount": 5,
-    "image": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/ghee-natural-oils.png",
     "editorialSize": "medium",
     "aspect": "aspect-[4/5]"
   },
@@ -72,7 +72,7 @@
     "sublabel": "Madinah Ajwa & King Medjool",
     "description": "Soft, nutrient-dense desert dates and wild moringa leaf powder for immediate restorative vitality.",
     "productCount": 5,
-    "image": "https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/dates-superfoods.png",
     "editorialSize": "medium",
     "aspect": "aspect-[4/5]"
   },
@@ -83,7 +83,7 @@
     "sublabel": "Curated Stacks & Daily Bundles",
     "description": "Harmonious nutrition kits pairing clean sports performance essentials with whole superfoods.",
     "productCount": 4,
-    "image": "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1000&q=85",
+    "image": "/images/combo-packages.png",
     "editorialSize": "wide",
     "aspect": "aspect-[16/10]"
   }

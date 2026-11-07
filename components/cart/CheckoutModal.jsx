@@ -50,271 +50,268 @@ export default function CheckoutModal() {
     setIsSubmitted(true);
     clearCart();
 
-      toast.success("Order Placed Successfully", {
-        style: {
-          background: "#173F35",
-          color: "#F7F5ED",
-          border: "1px solid #D6A54A",
-        },
-      });
-    };
+  toast.success("Order Placed Successfully", {
+    style: {
+      background: "#173F35",
+      color: "#F7F5ED",
+      border: "1px solid #D6A54A",
+    },
+  });
+};
 
-    const handleResetAndClose = () => {
-      setIsSubmitted(false);
-      closeCheckoutModal();
-    };
+const handleResetAndClose = () => {
+  setIsSubmitted(false);
+  closeCheckoutModal();
+};
 
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto">
-        {/* Backdrop */}
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-          onClick={handleResetAndClose}
-        />
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        onClick={handleResetAndClose}
+      />
 
-        <div className="min-h-full flex items-center justify-center p-4">
+          <div className="min-h-full flex items-center justify-center p-4">
             <div className="relative bg-white rounded-3xl max-w-xl w-full shadow-elevate border border-[#E7E3D8] overflow-hidden z-10 animate-scaleUp">
               {/* Header */}
-                  <div className="bg-[#173F35] text-[#F7F5ED] p-6 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-editorial text-lg text-white">
-                        {isSubmitted ? "Order Confirmed" : "Direct Checkout"}
-                      </h3>
-                      <p className="text-[11px] text-[#F7F5ED]/75 mt-0.5">
-                        {isSubmitted ? "Thank you for trusting FIT BARI" : "No pre-payment mandatory. Pay cash or bKash on delivery."}
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleResetAndClose}
-                      className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                    >
-                      <FiX size={16} />
-                    </button>
-                  </div>
+              <div className="bg-[#173F35] text-[#F7F5ED] p-6 flex items-center justify-between">
+                <div>
+                  <h3 className="font-editorial text-lg text-white">
+                    {isSubmitted ? "Order Confirmed" : "Direct Checkout"}
+                  </h3>
+                  <p className="text-[11px] text-[#F7F5ED]/75 mt-0.5">
+                    {isSubmitted ? "Thank you for trusting FIT BARI" : "No pre-payment mandatory. Pay cash or bKash on delivery."}
+                  </p>
+                </div>
+                <button
+                  onClick={handleResetAndClose}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+                  aria-label="Close checkout"
+                >
+                  <FiX size={16} />
+                </button>
+              </div>
 
-                  {/* Body */}
-                  {isSubmitted ? (
-                        <div className="p-8 text-center space-y-6">
-                          <div className="w-16 h-16 rounded-full bg-[#F7F5ED] text-[#173F35] flex items-center justify-center mx-auto text-2xl border border-[#E7E3D8]">
-                            <FiCheck />
+                  <div className="p-6">
+                    {isSubmitted ? (
+                      <div className="py-6 text-center space-y-4">
+                        <div className="w-16 h-16 rounded-full bg-[#829B76]/20 text-[#173F35] flex items-center justify-center mx-auto border border-[#829B76]/40">
+                          <FiCheck size={28} />
+                        </div>
+
+                        <div className="space-y-1">
+                          <h4 className="text-xl font-editorial text-[#173F35]">
+                            Invoice #{orderNumber} Generated
+                          </h4>
+                          <p className="text-xs text-[#777D76] max-w-sm mx-auto">
+                            Our fulfillment dispatch at Banani has received your order. We will reach out to <strong>{formData.phone}</strong> prior to delivery.
+                          </p>
+                        </div>
+
+                        <div className="p-4 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] max-w-sm mx-auto text-left text-xs space-y-1.5">
+                          <div className="flex justify-between">
+                            <span className="text-[#777D76]">Customer:</span>
+                            <span className="font-semibold">{formData.name}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#777D76]">Address:</span>
+                            <span className="font-semibold truncate max-w-[200px]">{formData.address}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#777D76]">Payment Mode:</span>
+                            <span className="font-semibold uppercase">{formData.paymentMethod}</span>
+                          </div>
+                          <div className="flex justify-between border-t border-[#E7E3D8] pt-1.5 text-sm font-bold text-[#173F35]">
+                            <span>Total Due:</span>
+                            <span>৳{totalAmount.toLocaleString()}</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-2">
+                          <button
+                            onClick={handleResetAndClose}
+                            className="h-11 px-8 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-95 text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider transition-all"
+                          >
+                            Return to Pantry
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Name & Phone */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                          <div>
+                            <label className="block text-xs font-semibold text-[#173F35] mb-1">
+                              Full Name *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all"
+                              placeholder="e.g. Mohammad Tanvir"
+                            />
                           </div>
 
-                              <div className="space-y-1">
-                                <span className="text-[11px] font-bold text-[#829B76] uppercase tracking-[0.2em] block">
-                                  DEMO ORDER CONFIRMATION
-                                </span>
-                                  <h2 className="text-2xl font-normal font-editorial text-[#173F35]">
-                                    Thank You, {formData.name}
-                                  </h2>
-                                    <div className="mt-2 inline-block px-3 py-1 rounded-full bg-[#F7F5ED] border border-[#E7E3D8] text-xs font-mono font-bold text-[#173F35]">
-                                      Order ID: {orderNumber}
-                                    </div>
-                                  </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-[#173F35] mb-1">
+                              Phone Number *
+                            </label>
+                            <input
+                              type="tel"
+                              required
+                              value={formData.phone}
+                              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                              className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all"
+                              placeholder="017XXXXXXXX"
+                            />
+                          </div>
+                        </div>
 
-                                    <div className="bg-[#F7F5ED] rounded-2xl p-4 text-left text-xs space-y-2 border border-[#E7E3D8]">
-                                      <div className="flex justify-between">
-                                        <span className="text-[#777D76]">Delivery Address:</span>
-                                        <span className="font-medium text-[#252A26] text-right max-w-xs">{formData.address}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-[#777D76]">Phone:</span>
-                                        <span className="font-medium text-[#252A26]">{formData.phone}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-[#777D76]">Payment Mode:</span>
-                                        <span className="font-semibold text-[#173F35] uppercase">{formData.paymentMethod}</span>
-                                      </div>
-                                        <div className="flex justify-between pt-2 border-t border-[#E7E3D8]">
-                                          <span className="font-semibold text-[#173F35]">Total Payable on Delivery:</span>
-                                          <span className="font-bold text-sm text-[#173F35]">৳{totalAmount.toLocaleString()}</span>
-                                        </div>
-                                      </div>
+                          {/* City & Address */}
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                            <div>
+                              <label className="block text-xs font-semibold text-[#173F35] mb-1">
+                                City / Region *
+                              </label>
+                              <select
+                                value={formData.city}
+                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all"
+                              >
+                                <option value="Dhaka">Dhaka (৳80)</option>
+                                <option value="Chittagong">Chittagong (৳130)</option>
+                                <option value="Sylhet">Sylhet (৳130)</option>
+                                <option value="Rajshahi">Rajshahi (৳130)</option>
+                                <option value="Khulna">Khulna (৳130)</option>
+                                <option value="Other">Other Region (৳130)</option>
+                              </select>
+                            </div>
 
-                                        <div className="flex items-center justify-center gap-2 text-xs text-[#777D76]">
-                                          <FiTruck className="text-[#829B76]" />
-                                          <span>Estimated Delivery: Within 24-48 Hours</span>
-                                        </div>
+                            <div className="sm:col-span-2">
+                              <label className="block text-xs font-semibold text-[#173F35] mb-1">
+                                Delivery Address *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all"
+                                placeholder="House, Road, Area, Landmark"
+                              />
+                            </div>
+                          </div>
 
-                                        <button
-                                          onClick={handleResetAndClose}
-                                          className="w-full py-3 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider transition-colors"
-                                        >
-                                          Return to Collections
-                                        </button>
-                                      </div>
-                                      ) : (
-                                            <form onSubmit={handleSubmit} className="p-6 sm:p-7 space-y-5">
-                                              <div className="bg-[#F7F5ED] rounded-2xl p-3.5 border border-[#E7E3D8] text-xs flex justify-between items-center">
-                                                <span className="text-[#777D76]">
-                                                  Items in cart: <strong className="text-[#173F35]">{cart.length}</strong>
-                                                </span>
-                                                  <span className="text-[#173F35] font-semibold">
-                                                    Subtotal: <strong>৳{cartSubtotal.toLocaleString()}</strong>
-                                                  </span>
-                                              </div>
+                        {/* Notes */}
+                        <div>
+                          <label className="block text-xs font-semibold text-[#173F35] mb-1">
+                            Special Delivery Instructions
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.notes}
+                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                            className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all"
+                            placeholder="e.g. Ring bell twice, deliver after 3 PM"
+                          />
+                        </div>
 
-                                              <div className="space-y-3">
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                  <div>
-                                                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1">
-                                                        Full Name *
-                                                      </label>
-                                                      <input
-                                                        type="text"
-                                                        required
-                                                        value={formData.name}
-                                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                        className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E7E3D8] focus:border-[#173F35] outline-none"
-                                                      />
-                                                  </div>
-                                                  <div>
-                                                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1">
-                                                        Phone Number *
-                                                      </label>
-                                                      <input
-                                                        type="tel"
-                                                        required
-                                                        value={formData.phone}
-                                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                        className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E7E3D8] focus:border-[#173F35] outline-none"
-                                                      />
-                                                  </div>
-                                                </div>
+                            {/* Payment Selection */}
+                            <div>
+                              <label className="block text-xs font-semibold text-[#173F35] mb-1.5">
+                                Select Payment Method
+                              </label>
+                              <div className="grid grid-cols-3 gap-2.5">
+                                <label
+                                  className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "cod"
+                                      ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35] shadow-xs"
+                                      : "border-[#E7E3D8] text-[#777D76] hover:border-[#173F35]/40"
+                                    }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="payment"
+                                    value="cod"
+                                    checked={formData.paymentMethod === "cod"}
+                                    onChange={() => setFormData({ ...formData, paymentMethod: "cod" })}
+                                    className="sr-only"
+                                  />
+                                  <FaMoneyBillWave className="text-base text-[#173F35] mb-1" />
+                                  <span className="text-[11px]">Cash on Delivery</span>
+                                </label>
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                  <div>
-                                                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1">
-                                                        Delivery Region
-                                                      </label>
-                                                      <select
-                                                        value={formData.city}
-                                                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                        className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E7E3D8] focus:border-[#173F35] outline-none bg-white"
-                                                      >
-                                                        <option value="Dhaka">Inside Dhaka (৳80 or Free above ৳2000)</option>
-                                                        <option value="Outside">Outside Dhaka (৳130 or Free above ৳2000)</option>
-                                                      </select>
-                                                  </div>
-                                                  <div>
-                                                      <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1">
-                                                        Delivery Notes
-                                                      </label>
-                                                      <input
-                                                        type="text"
-                                                        value={formData.notes}
-                                                        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                                        className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E7E3D8] focus:border-[#173F35] outline-none"
-                                                        placeholder="e.g. Call before delivery"
-                                                      />
-                                                  </div>
-                                                </div>
+                                <label
+                                  className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "bkash"
+                                      ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35] shadow-xs"
+                                      : "border-[#E7E3D8] text-[#777D76] hover:border-[#173F35]/40"
+                                    }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="payment"
+                                    value="bkash"
+                                    checked={formData.paymentMethod === "bkash"}
+                                    onChange={() => setFormData({ ...formData, paymentMethod: "bkash" })}
+                                    className="sr-only"
+                                  />
+                                  <FaMobileAlt className="text-base text-[#D6A54A] mb-1" />
+                                  <span className="text-[11px]">bKash</span>
+                                </label>
 
-                                                <div>
-                                                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1">
-                                                      Street Address *
-                                                    </label>
-                                                    <textarea
-                                                      rows={2}
-                                                      required
-                                                      value={formData.address}
-                                                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E7E3D8] focus:border-[#173F35] outline-none resize-none"
-                                                    />
-                                                </div>
-                                              </div>
+                            <label
+                              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "nagad"
+                                  ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35] shadow-xs"
+                                  : "border-[#E7E3D8] text-[#777D76] hover:border-[#173F35]/40"
+                                }`}
+                            >
+                              <input
+                                type="radio"
+                                name="payment"
+                                value="nagad"
+                                checked={formData.paymentMethod === "nagad"}
+                                onChange={() => setFormData({ ...formData, paymentMethod: "nagad" })}
+                                className="sr-only"
+                              />
+                              <FaMobileAlt className="text-base text-[#D6A54A] mb-1" />
+                              <span className="text-[11px]">Nagad</span>
+                            </label>
+                          </div>
+                        </div>
 
-                                              {/* Payment Method Selector */}
-                                              <div>
-                                                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#173F35] mb-1.5">
-                                                    Payment Method
-                                                  </label>
-                                                  <div className="grid grid-cols-3 gap-2">
-                                                    <label
-                                                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "cod"
-                                                            ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35]"
-                                                            : "border-[#E7E3D8] text-[#777D76]"
-                                                        }`}
-                                                    >
-                                                      <input
-                                                        type="radio"
-                                                        name="payment"
-                                                        value="cod"
-                                                        checked={formData.paymentMethod === "cod"}
-                                                        onChange={() => setFormData({ ...formData, paymentMethod: "cod" })}
-                                                        className="sr-only"
-                                                      />
-                                                      <FaMoneyBillWave className="text-base text-[#173F35] mb-1" />
-                                                      <span className="text-[11px]">Cash on Delivery</span>
-                                                    </label>
+                        {/* Price Breakdown */}
+                        <div className="border-t border-[#E7E3D8] pt-3.5 space-y-1.5 text-xs">
+                          <div className="flex justify-between text-[#777D76]">
+                            <span>Items Subtotal</span>
+                            <span className="font-semibold text-[#252A26]">৳{cartSubtotal.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between text-[#777D76]">
+                            <span>Delivery Charge</span>
+                            <span className="font-semibold text-[#829B76]">
+                              {shippingCost === 0 ? "FREE" : `৳${shippingCost}`}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
+                            <span>Total Amount Payable</span>
+                            <span className="text-base text-[#173F35]">৳{totalAmount.toLocaleString()}</span>
+                          </div>
+                        </div>
 
-                                                    <label
-                                                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "bkash"
-                                                            ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35]"
-                                                            : "border-[#E7E3D8] text-[#777D76]"
-                                                        }`}
-                                                    >
-                                                      <input
-                                                        type="radio"
-                                                        name="payment"
-                                                        value="bkash"
-                                                        checked={formData.paymentMethod === "bkash"}
-                                                        onChange={() => setFormData({ ...formData, paymentMethod: "bkash" })}
-                                                        className="sr-only"
-                                                      />
-                                                      <FaMobileAlt className="text-base text-[#D6A54A] mb-1" />
-                                                      <span className="text-[11px]">bKash (Send Money)</span>
-                                                    </label>
-
-                                                    <label
-                                                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center cursor-pointer transition-all ${formData.paymentMethod === "nagad"
-                                                            ? "border-[#173F35] bg-[#173F35]/5 font-semibold text-[#173F35]"
-                                                            : "border-[#E7E3D8] text-[#777D76]"
-                                                        }`}
-                                                    >
-                                                      <input
-                                                        type="radio"
-                                                        name="payment"
-                                                        value="nagad"
-                                                        checked={formData.paymentMethod === "nagad"}
-                                                        onChange={() => setFormData({ ...formData, paymentMethod: "nagad" })}
-                                                        className="sr-only"
-                                                      />
-                                                      <FaMobileAlt className="text-base text-[#D6A54A] mb-1" />
-                                                      <span className="text-[11px]">Nagad (Send Money)</span>
-                                                    </label>
-                                                  </div>
-                                              </div>
-
-                                              {/* Price Breakdown */}
-                                                  <div className="border-t border-[#E7E3D8] pt-3 space-y-1.5 text-xs">
-                                                    <div className="flex justify-between text-[#777D76]">
-                                                      <span>Items Subtotal</span>
-                                                      <span className="font-semibold text-[#252A26]">৳{cartSubtotal.toLocaleString()}</span>
-                                                    </div>
-                                                      <div className="flex justify-between text-[#777D76]">
-                                                        <span>Delivery Charge</span>
-                                                          <span className="font-semibold text-[#829B76]">
-                                                            {shippingCost === 0 ? "FREE" : `৳${shippingCost}`}
-                                                          </span>
-                                                      </div>
-                                                        <div className="flex justify-between text-sm font-bold text-[#173F35] pt-1 border-t border-[#E7E3D8]">
-                                                          <span>Total Amount Payable</span>
-                                                          <span className="text-base text-[#173F35]">৳{totalAmount.toLocaleString()}</span>
-                                                        </div>
-                                                      </div>
-
-                                                      {/* CTA */}
-                                                      <button
-                                                        type="submit"
-                                                        className="w-full py-3.5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
-                                                      >
-                                                        <span>Confirm Order (৳{totalAmount.toLocaleString()})</span>
-                                                        <FiArrowRight size={13} />
-                                                      </button>
-                                                    </form>
-          )}
-                                                  </div>
-                                                </div>
-                                              </div>
-                                              );
+            {/* Primary CTA */}
+            <button
+              type="submit"
+              className="w-full h-12 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-[0.98] text-[#F7F5ED] text-xs sm:text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#173F35]"
+            >
+              <span>Confirm Order (৳{totalAmount.toLocaleString()})</span>
+              <FiArrowRight size={14} />
+            </button>
+          </form>
+            )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 }
