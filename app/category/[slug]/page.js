@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import categoriesData from "@/data/categories.json";
-import productsData from "@/data/products.json";
+import fallbackCategories from "@/data/categories.json";
+import fallbackProducts from "@/data/products.json";
 import comboPackages from "@/data/comboPackages.json";
+import { fetchProducts, fetchCategories, normalizeProduct, normalizeCategory } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { FiShield, FiShoppingBag, FiArrowRight } from "react-icons/fi";
@@ -16,7 +17,41 @@ export default function CategoryPage() {
   const slug = params.slug;
   const { addToCart } = useCart();
 
-  const category = categoriesData.find((c) => c.slug === slug) || {
+    const [categories, setCategories] = useState(() => fallbackCategories.map(normalizeCategory));
+    const [products, setProducts] = useState(() => fallbackProducts.map(normalizeProduct));
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+    let isMounted = true;
+    async function loadData() {
+      setLoading(true);
+      try {
+        const [catRes, prodRes] = await Promise.allSettled([
+          fetchCategories(),
+          fetchProducts({ category: slug }),
+        ]);
+
+        if (isMounted) {
+          if (catRes.status === "fulfilled" && catRes.value?.length > 0) {
+            setCategories(catRes.value);
+          }
+          if (prodRes.status === "fulfilled" && prodRes.value.products?.length > 0) {
+            setProducts(prodRes.value.products);
+          }
+        }
+      } catch (err) {
+        console.warn("CategoryPage: backend fetch error, using fallback", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  const category = categories.find((c) => c.slug === slug) || {
     name: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     sublabel: "Curated Collection",
     description: "Explore our single-origin harvests and lab-verified sports nutrition.",
@@ -25,7 +60,9 @@ export default function CategoryPage() {
   };
 
   const isComboCategory = slug === "combo-packages";
-  const categoryProducts = productsData.filter((p) => p.categorySlug === slug);
+  const categoryProducts = products.filter(
+    (p) => (p.categorySlug || "").toLowerCase() === (slug || "").toLowerCase()
+  );
 
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
@@ -40,36 +77,36 @@ export default function CategoryPage() {
         />
 
         {/* Category Hero Banner - Editorial Header */}
-          <div className="relative rounded-3xl overflow-hidden shadow-elevate mb-12 min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] flex items-center bg-[#173F35] text-white">
-            {/* Background gradient & ambient lighting */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#173F35] via-[#173F35] to-[#102C23]" />
-            <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-96 h-96 bg-[#829B76]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative rounded-3xl overflow-hidden shadow-elevate mb-12 min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] flex items-center bg-[#173F35] text-white">
+          {/* Background gradient & ambient lighting */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#173F35] via-[#173F35] to-[#102C23]" />
+          <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-96 h-96 bg-[#829B76]/15 rounded-full blur-3xl pointer-events-none" />
 
-                {/* Category Product Image - Set perfectly on the right */}
-                {category.image && (
-                  <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 flex items-center justify-end pointer-events-none select-none overflow-hidden pr-2 sm:pr-6 lg:pr-10">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="h-full w-auto max-h-[250px] sm:max-h-[290px] lg:max-h-[330px] object-contain object-right drop-shadow-2xl opacity-90 sm:opacity-100 transition-transform duration-700 hover:scale-105"
-                    />
-                    {/* Subtle fade on small screens so left text remains 100% legible */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#173F35] via-[#173F35]/75 to-transparent sm:hidden" />
-                  </div>
-                )}
+          {/* Category Product Image - Set perfectly on the right */}
+          {category.image && (
+            <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 flex items-center justify-end pointer-events-none select-none overflow-hidden pr-2 sm:pr-6 lg:pr-10">
+              <img
+                src={category.image}
+                alt={category.name}
+                className="h-full w-auto max-h-[250px] sm:max-h-[290px] lg:max-h-[330px] object-contain object-right drop-shadow-2xl opacity-90 sm:opacity-100 transition-transform duration-700 hover:scale-105"
+              />
+              {/* Subtle fade on small screens so left text remains 100% legible */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#173F35] via-[#173F35]/75 to-transparent sm:hidden" />
+            </div>
+          )}
 
-                <div className="relative p-6 sm:p-10 lg:p-12 z-10 max-w-xl lg:max-w-2xl space-y-3.5">
-                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#D6A54A] block">
-                    {category.sublabel || "Pantry Collection"}
-                  </span>
+          <div className="relative p-6 sm:p-10 lg:p-12 z-10 max-w-xl lg:max-w-2xl space-y-3.5">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-[#D6A54A] block">
+              {category.sublabel || "Pantry Collection"}
+            </span>
 
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-editorial text-white tracking-tight leading-tight">
-                    {category.name}
-                  </h1>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-editorial text-white tracking-tight leading-tight">
+              {category.name}
+            </h1>
 
-                  <p className="text-xs sm:text-sm text-[#F7F5ED]/85 leading-relaxed max-w-lg">
-                    {category.description}
-                  </p>
+            <p className="text-xs sm:text-sm text-[#F7F5ED]/85 leading-relaxed max-w-lg">
+              {category.description}
+            </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-[#F7F5ED]/80">
               <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10">
@@ -181,7 +218,7 @@ export default function CategoryPage() {
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {categoryProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id || product.slug} product={product} />
                 ))}
               </div>
             )}
@@ -200,7 +237,7 @@ export default function CategoryPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-            {categoriesData
+            {categories
               .filter((c) => c.slug !== slug)
               .map((c) => (
                 <Link

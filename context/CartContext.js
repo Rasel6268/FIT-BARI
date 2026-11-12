@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { fetchSettings } from "@/lib/api";
 
 const CartContext = createContext(null);
 
@@ -13,6 +14,38 @@ export function CartProvider({ children }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [storeSettings, setStoreSettings] = useState({
+    storeName: "FIT BARI",
+    currencySymbol: "৳",
+    freeShippingThreshold: 2000,
+    dhakaShipping: 80,
+    outsideDhakaShipping: 130,
+    supportPhone: "01712-345678",
+    supportEmail: "support@fitbari.com",
+    announcements: [
+      "100% Lab-Verified Single-Origin Sundarban Honey & Micro-Filtered Protein",
+      "Verified batch authenticity — Inspection before payment supported nationwide",
+    ],
+    codEnabled: true,
+    bkashEnabled: true,
+    nagadEnabled: true,
+  });
+
+  // Load live store settings from backend
+  const loadSettings = async () => {
+    try {
+      const res = await fetchSettings();
+      if (res?.settings) {
+        setStoreSettings(res.settings);
+      }
+    } catch (e) {
+      console.warn("Settings fetch fallback:", e);
+    }
+  };
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
   // Initialize from localStorage on mount
   useEffect(() => {
@@ -34,109 +67,120 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem("fitbari_cart", JSON.stringify(cart));
-    } catch (e) {}
+    } catch (e) { }
   }, [cart]);
 
   useEffect(() => {
     try {
       localStorage.setItem("fitbari_wishlist", JSON.stringify(wishlist));
-    } catch (e) {}
+    } catch (e) { }
   }, [wishlist]);
 
   useEffect(() => {
     try {
       localStorage.setItem("fitbari_recent", JSON.stringify(recentlyViewed));
-    } catch (e) {}
+    } catch (e) { }
   }, [recentlyViewed]);
+
+  const getProdId = (p) => (p ? String(p.slug || p._id || p.id) : "");
+  const getProdPrice = (p) =>
+    p ? (typeof p.price === "number" ? p.price : p.discountedPrice || p.regularPrice || 0) : 0;
 
   const addToCart = (product, quantity = 1, selectedWeight = null) => {
     if (!product) return;
     const weight = selectedWeight || product.weight || "Standard";
+    const prodId = getProdId(product);
 
     setCart((prev) => {
       const existingIndex = prev.findIndex(
-        (item) => item.product.id === product.id && item.selectedWeight === weight
+          (item) => getProdId(item.product) === prodId && item.selectedWeight === weight
       );
 
-      if (existingIndex > -1) {
-        const next = [...prev];
-        next[existingIndex] = {
-          ...next[existingIndex],
-          quantity: next[existingIndex].quantity + quantity,
-        };
-        return next;
-      } else {
-        return [...prev, { product, quantity, selectedWeight: weight }];
-      }
-    });
+  if (existingIndex > -1) {
+    const next = [...prev];
+    next[existingIndex] = {
+      ...next[existingIndex],
+      quantity: next[existingIndex].quantity + quantity,
+    };
+    return next;
+  } else {
+    return [...prev, { product, quantity, selectedWeight: weight }];
+  }
+});
 
-    toast.success(
-      `Added "${product.name.slice(0, 24)}..." to your cart!`,
-      {
-        icon: "🛒",
-        style: {
-          borderRadius: "10px",
-          background: "#173F35",
-          color: "#FAF7EF",
-          border: "1px solid #D9A441",
-        },
-      }
-    );
+toast.success(
+  `Added "${(product.name || "").slice(0, 24)}..." to your cart!`,
+  {
+    icon: "🛒",
+    style: {
+      borderRadius: "10px",
+      background: "#173F35",
+      color: "#FAF7EF",
+      border: "1px solid #D9A441",
+    },
+  }
+);
   };
 
-  const removeFromCart = (productId, selectedWeight) => {
-    setCart((prev) =>
-      prev.filter(
-        (item) =>
-          !(item.product.id === productId && (!selectedWeight || item.selectedWeight === selectedWeight))
+const removeFromCart = (productId, selectedWeight) => {
+  const targetId = String(productId);
+  setCart((prev) =>
+    prev.filter(
+      (item) =>
+          !(
+        getProdId(item.product) === targetId &&
+        (!selectedWeight || item.selectedWeight === selectedWeight)
       )
-    );
-    toast("Item removed from cart", {
-      icon: "🗑️",
+    )
+  );
+  toast("Item removed from cart", {
+    icon: "🗑️",
+    style: {
+      borderRadius: "10px",
+      background: "#252B28",
+      color: "#FAF7EF",
+    },
+  });
+};
+
+const updateQuantity = (productId, selectedWeight, newQty) => {
+  if (newQty <= 0) {
+    removeFromCart(productId, selectedWeight);
+    return;
+  }
+  const targetId = String(productId);
+  setCart((prev) =>
+    prev.map((item) => {
+        if (getProdId(item.product) === targetId && item.selectedWeight === selectedWeight) {
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      })
+  );
+};
+
+const clearCart = () => {
+  setCart([]);
+};
+
+const toggleWishlist = (product) => {
+  if (!product) return;
+  const prodId = getProdId(product);
+  const exists = wishlist.some((item) => getProdId(item) === prodId);
+
+  if (exists) {
+    setWishlist((prev) => prev.filter((item) => getProdId(item) !== prodId));
+    toast("Removed from Wishlist", {
+      icon: "🤍",
       style: {
         borderRadius: "10px",
         background: "#252B28",
         color: "#FAF7EF",
       },
     });
-  };
-
-  const updateQuantity = (productId, selectedWeight, newQty) => {
-    if (newQty <= 0) {
-      removeFromCart(productId, selectedWeight);
-      return;
-    }
-    setCart((prev) =>
-      prev.map((item) => {
-        if (item.product.id === productId && item.selectedWeight === selectedWeight) {
-          return { ...item, quantity: newQty };
-        }
-        return item;
-      })
-    );
-  };
-
-  const clearCart = () => {
-    setCart([]);
-  };
-
-  const toggleWishlist = (product) => {
-    if (!product) return;
-    const exists = wishlist.some((item) => item.id === product.id);
-
-    if (exists) {
-      setWishlist((prev) => prev.filter((item) => item.id !== product.id));
-      toast("Removed from Wishlist", {
-        icon: "🤍",
-        style: {
-          borderRadius: "10px",
-          background: "#252B28",
-          color: "#FAF7EF",
-        },
-      });
-    } else {
-      setWishlist((prev) => [...prev, product]);
-      toast.success(`Saved "${product.name.slice(0, 22)}..." to Wishlist`, {
+  } else {
+    setWishlist((prev) => [...prev, product]);
+      toast.success(`Saved "${(product.name || "").slice(0, 22)}..." to Wishlist`, {
         icon: "❤️",
         style: {
           borderRadius: "10px",
@@ -149,26 +193,38 @@ export function CartProvider({ children }) {
   };
 
   const isInWishlist = (productId) => {
-    return wishlist.some((item) => item.id === productId);
+    const targetId = String(productId);
+    return wishlist.some((item) => getProdId(item) === targetId);
   };
 
   const addToRecentlyViewed = (product) => {
     if (!product) return;
+    const prodId = getProdId(product);
     setRecentlyViewed((prev) => {
-      const filtered = prev.filter((p) => p.id !== product.id);
+      const filtered = prev.filter((p) => getProdId(p) !== prodId);
       return [product, ...filtered].slice(0, 8);
     });
   };
 
   const cartSubtotal = cart.reduce(
-    (sum, item) => sum + (item.product.discountedPrice || item.product.regularPrice) * item.quantity,
+    (sum, item) => sum + getProdPrice(item.product) * item.quantity,
     0
   );
 
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-  const freeDeliveryThreshold = 2000;
-  const freeDeliveryProgress = Math.min(100, Math.round((cartSubtotal / freeDeliveryThreshold) * 100));
+  const freeDeliveryThreshold = Number(storeSettings.freeShippingThreshold) || 2000;
+  const dhakaShipping =
+    storeSettings.dhakaShipping !== undefined ? Number(storeSettings.dhakaShipping) : 80;
+  const outsideDhakaShipping =
+    storeSettings.outsideDhakaShipping !== undefined
+      ? Number(storeSettings.outsideDhakaShipping)
+      : 130;
+
+  const freeDeliveryProgress = Math.min(
+    100,
+    Math.round((cartSubtotal / freeDeliveryThreshold) * 100)
+  );
   const amountNeededForFreeDelivery = Math.max(0, freeDeliveryThreshold - cartSubtotal);
 
   return (
@@ -196,9 +252,13 @@ export function CartProvider({ children }) {
         addToRecentlyViewed,
         cartSubtotal,
         cartCount,
+        storeSettings,
         freeDeliveryThreshold,
+        dhakaShipping,
+        outsideDhakaShipping,
         freeDeliveryProgress,
         amountNeededForFreeDelivery,
+        refreshSettings: loadSettings,
         isCheckoutModalOpen,
         openCheckoutModal: () => setIsCheckoutModalOpen(true),
         closeCheckoutModal: () => setIsCheckoutModalOpen(false),

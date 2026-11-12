@@ -1,29 +1,66 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import productsData from "@/data/products.json";
-import categoriesData from "@/data/categories.json";
+import fallbackProducts from "@/data/products.json";
+import fallbackCategories from "@/data/categories.json";
+import { fetchProducts, fetchCategories, normalizeProduct, normalizeCategory } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { 
-  FiFilter, 
-  FiSliders, 
-  FiX, 
-  FiRotateCcw, 
-  FiSearch 
+import {
+  FiFilter,
+  FiSliders,
+  FiX,
+  FiRotateCcw,
+  FiSearch
 } from "react-icons/fi";
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
+  const initialCategory = searchParams.get("category") || "all";
+
+  const [productsData, setProductsData] = useState(() => fallbackProducts.map(normalizeProduct));
+  const [categoriesData, setCategoriesData] = useState(() => fallbackCategories.map(normalizeCategory));
+  const [loading, setLoading] = useState(false);
 
   const [searchFilter, setSearchFilter] = useState(initialQuery);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [priceRange, setPriceRange] = useState(5000);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Load live catalog and categories from backend API
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCatalog() {
+      setLoading(true);
+      try {
+        const [prodRes, catRes] = await Promise.allSettled([
+          fetchProducts(),
+          fetchCategories(),
+        ]);
+
+        if (isMounted) {
+          if (prodRes.status === "fulfilled" && prodRes.value.products?.length > 0) {
+            setProductsData(prodRes.value.products);
+          }
+          if (catRes.status === "fulfilled" && catRes.value?.length > 0) {
+            setCategoriesData(catRes.value);
+          }
+        }
+      } catch (err) {
+        console.warn("Shop: backend fetch warning, using bundled catalog", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadCatalog();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -78,7 +115,7 @@ function ShopContent() {
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Breadcrumbs */}
         <Breadcrumbs items={[{ label: "Pantry Catalog" }]} />
 
@@ -97,7 +134,7 @@ function ShopContent() {
 
         {/* Layout: Sidebar + Main Product Area */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Desktop Filters Sidebar (3 cols) */}
           <aside className="hidden lg:block lg:col-span-3 bg-white rounded-3xl p-6 border border-[#E7E3D8] shadow-subtle space-y-6 sticky top-28">
             <div className="flex items-center justify-between pb-4 border-b border-[#E7E3D8]">
@@ -142,11 +179,10 @@ function ShopContent() {
               <div className="space-y-1">
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${
-                    selectedCategory === "all"
+                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${selectedCategory === "all"
                       ? "bg-[#173F35] text-[#F7F5ED] font-semibold"
                       : "text-[#252A26] hover:bg-[#F7F5ED]"
-                  }`}
+                    }`}
                 >
                   <span>All Categories</span>
                   <span className="text-[10px] opacity-75">{productsData.length}</span>
@@ -157,11 +193,10 @@ function ShopContent() {
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.slug)}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${
-                        selectedCategory === cat.slug
+                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${selectedCategory === cat.slug
                           ? "bg-[#173F35] text-[#F7F5ED] font-semibold"
                           : "text-[#252A26] hover:bg-[#F7F5ED]"
-                      }`}
+                        }`}
                     >
                       <span className="truncate">{cat.name}</span>
                       <span className="text-[10px] opacity-75">{count}</span>
@@ -212,7 +247,7 @@ function ShopContent() {
 
           {/* Main Products Grid Area (9 cols) */}
           <div className="lg:col-span-9 space-y-6">
-            
+
             {/* Top Bar Controls */}
             <div className="bg-white rounded-2xl p-4 border border-[#E7E3D8] shadow-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center justify-between w-full sm:w-auto gap-4">
@@ -333,9 +368,8 @@ function ShopContent() {
                 <div className="space-y-1">
                   <button
                     onClick={() => setSelectedCategory("all")}
-                    className={`w-full text-left px-3 py-1.5 rounded text-xs ${
-                      selectedCategory === "all" ? "bg-[#173F35] text-white" : "text-[#252A26]"
-                    }`}
+                    className={`w-full text-left px-3 py-1.5 rounded text-xs ${selectedCategory === "all" ? "bg-[#173F35] text-white" : "text-[#252A26]"
+                      }`}
                   >
                     All Categories
                   </button>
@@ -343,9 +377,8 @@ function ShopContent() {
                     <button
                       key={cat.id}
                       onClick={() => setSelectedCategory(cat.slug)}
-                      className={`w-full text-left px-3 py-1.5 rounded text-xs ${
-                        selectedCategory === cat.slug ? "bg-[#173F35] text-white" : "text-[#252A26]"
-                      }`}
+                      className={`w-full text-left px-3 py-1.5 rounded text-xs ${selectedCategory === cat.slug ? "bg-[#173F35] text-white" : "text-[#252A26]"
+                        }`}
                     >
                       {cat.name}
                     </button>

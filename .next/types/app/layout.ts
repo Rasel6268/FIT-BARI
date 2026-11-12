@@ -1,4 +1,4 @@
-// File: C:\Programming\FIT BARI\app\layout.js
+// File: C:\Programming\Fit_bari\fitbari_frontend\app\layout.js
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

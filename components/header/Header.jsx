@@ -207,6 +207,16 @@ export default function Header() {
             >
               Contact
             </Link>
+
+            <Link
+              href="/track-order"
+              className={`px-3 py-1.5 text-xs font-semibold tracking-wide uppercase transition-colors rounded-full ${pathname === "/track-order"
+                  ? "text-[#173F35] bg-[#173F35]/10 font-bold"
+                  : "text-[#173F35] hover:text-[#0F2B24]"
+                }`}
+            >
+              Track Order
+            </Link>
           </nav>
 
           {/* RIGHT: Actions (Search, Wishlist, Cart) */}

@@ -3,15 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { 
-  FiX, 
-  FiShoppingBag, 
-  FiTrash2, 
-  FiPlus, 
-  FiMinus, 
-  FiArrowRight, 
-  FiTruck, 
-  FiCheck 
+import {
+  FiX,
+  FiShoppingBag,
+  FiTrash2,
+  FiPlus,
+  FiMinus,
+  FiArrowRight,
+  FiTruck,
+  FiCheck
 } from "react-icons/fi";
 
 export default function CartDrawer() {
@@ -77,11 +77,10 @@ export default function CartDrawer() {
           </div>
           <div className="w-full bg-[#F7F5ED] h-1.5 rounded-full overflow-hidden border border-[#E7E3D8]/80">
             <div
-              className={`h-full transition-all duration-500 rounded-full ${
-                freeDeliveryProgress >= 100
+              className={`h-full transition-all duration-500 rounded-full ${freeDeliveryProgress >= 100
                   ? "bg-[#173F35]"
                   : "bg-[#829B76]"
-              }`}
+                }`}
               style={{ width: `${freeDeliveryProgress}%` }}
             />
           </div>
@@ -107,12 +106,16 @@ export default function CartDrawer() {
             </div>
           ) : (
             cart.map((item) => {
-              const itemPrice = item.product.discountedPrice || item.product.regularPrice;
+              const prodId = item.product.slug || item.product.id || item.product._id;
+              const itemPrice =
+                typeof item.product.price === "number"
+                  ? item.product.price
+                  : item.product.discountedPrice || item.product.regularPrice || 0;
               const itemTotal = itemPrice * item.quantity;
 
               return (
                 <div
-                  key={`${item.product.id}-${item.selectedWeight}`}
+                  key={`${prodId}-${item.selectedWeight}`}
                   className="bg-white p-3.5 rounded-2xl border border-[#E7E3D8] shadow-subtle flex gap-3.5 items-center"
                 >
                   <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#F7F5ED] flex-shrink-0 border border-[#E7E3D8]/80">
@@ -129,7 +132,7 @@ export default function CartDrawer() {
                         {item.product.name}
                       </h4>
                       <button
-                        onClick={() => removeFromCart(item.product.id, item.selectedWeight)}
+                        onClick={() => removeFromCart(prodId, item.selectedWeight)}
                         className="text-[#777D76] hover:text-red-500 p-1 transition-colors"
                         aria-label="Remove item"
                       >
@@ -146,88 +149,90 @@ export default function CartDrawer() {
                       <div className="flex items-center border border-[#E7E3D8] rounded-full overflow-hidden bg-[#F7F5ED]">
                         <button
                           onClick={() =>
-                            updateQuantity(item.product.id, item.selectedWeight, item.quantity - 1)
+                            updateQuantity(prodId, item.selectedWeight, item.quantity - 1)
                           }
-                          className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
-                          aria-label="Decrease quantity"
+                        className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
+                        aria-label="Decrease quantity"
                         >
-                          <FiMinus size={10} />
-                        </button>
-                        <span className="w-6 text-center text-xs font-bold text-[#173F35]">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.product.id, item.selectedWeight, item.quantity + 1)
-                          }
-                          className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
-                          aria-label="Increase quantity"
-                        >
-                          <FiPlus size={10} />
-                        </button>
-                      </div>
-
-                      <span className="text-xs font-bold text-[#173F35]">
-                        ৳{itemTotal.toLocaleString()}
+                        <FiMinus size={10} />
+                      </button>
+                      <span className="w-6 text-center text-xs font-bold text-[#173F35]">
+                        {item.quantity}
                       </span>
-                    </div>
+                      <button
+                        onClick={() =>
+                            updateQuantity(prodId, item.selectedWeight, item.quantity + 1)
+                          }
+                      className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
+                      aria-label="Increase quantity"
+                        >
+                      <FiPlus size={10} />
+                    </button>
                   </div>
+
+                  <span className="text-xs font-bold text-[#173F35]">
+                    ৳{itemTotal.toLocaleString()}
+                  </span>
                 </div>
-              );
+                  </div>
+      </div>
+      );
             })
           )}
+    </div>
+
+        {/* Footer Summary & Checkout */ }
+  {
+    cart.length > 0 && (
+      <div className="p-5 bg-white border-t border-[#E7E3D8] space-y-3">
+        <div className="space-y-1.5 text-xs">
+          <div className="flex justify-between text-[#777D76]">
+            <span>Pantry Subtotal</span>
+            <span className="font-semibold text-[#252A26]">
+              ৳{cartSubtotal.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex justify-between text-[#777D76]">
+            <span>Nationwide Shipping</span>
+            <span className="font-semibold text-[#829B76]">
+              {amountNeededForFreeDelivery === 0 ? "FREE" : "৳80 (Dhaka) / ৳130 (Outside)"}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
+            <span>Estimated Total</span>
+            <span className="text-base text-[#173F35]">
+              ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : 80)).toLocaleString()}
+            </span>
+          </div>
         </div>
 
-        {/* Footer Summary & Checkout */}
-        {cart.length > 0 && (
-          <div className="p-5 bg-white border-t border-[#E7E3D8] space-y-3">
-            <div className="space-y-1.5 text-xs">
-              <div className="flex justify-between text-[#777D76]">
-                <span>Pantry Subtotal</span>
-                <span className="font-semibold text-[#252A26]">
-                  ৳{cartSubtotal.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between text-[#777D76]">
-                <span>Nationwide Shipping</span>
-                <span className="font-semibold text-[#829B76]">
-                  {amountNeededForFreeDelivery === 0 ? "FREE" : "৳80 (Dhaka) / ৳130 (Outside)"}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
-                <span>Estimated Total</span>
-                <span className="text-base text-[#173F35]">
-                  ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : 80)).toLocaleString()}
-                </span>
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
+          <Link
+            href="/cart"
+            onClick={closeCart}
+            className="h-11 px-4 rounded-full border border-[#E7E3D8] hover:border-[#173F35] active:scale-[0.98] text-[#173F35] font-semibold text-xs uppercase tracking-wider flex items-center justify-center text-center transition-colors"
+          >
+            View Cart
+          </Link>
+          <button
+            onClick={() => {
+              closeCart();
+              openCheckoutModal();
+            }}
+            className="h-11 px-4 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-[0.98] text-[#F7F5ED] font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#173F35]"
+          >
+            <span>Checkout</span>
+            <FiArrowRight size={13} />
+          </button>
+        </div>
 
-            <div className="grid grid-cols-2 gap-2.5 pt-1">
-              <Link
-                href="/cart"
-                onClick={closeCart}
-                className="h-11 px-4 rounded-full border border-[#E7E3D8] hover:border-[#173F35] active:scale-[0.98] text-[#173F35] font-semibold text-xs uppercase tracking-wider flex items-center justify-center text-center transition-colors"
-              >
-                View Cart
-              </Link>
-              <button
-                onClick={() => {
-                  closeCart();
-                  openCheckoutModal();
-                }}
-                className="h-11 px-4 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-[0.98] text-[#F7F5ED] font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#173F35]"
-              >
-                <span>Checkout</span>
-                <FiArrowRight size={13} />
-              </button>
-            </div>
-
-            <p className="text-[10px] text-center text-[#777D76]">
-              Verified genuine batches • Cash on delivery supported nationwide
-            </p>
-          </div>
-        )}
+        <p className="text-[10px] text-center text-[#777D76]">
+          Verified genuine batches • Cash on delivery supported nationwide
+        </p>
       </div>
-    </div>
+    )
+  }
+      </div >
+    </div >
   );
 }

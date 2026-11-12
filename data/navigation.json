@@ -76,6 +76,7 @@
       { "name": "Pure Ghee & Black Seed Oil", "href": "/category/ghee-natural-oils" }
     ],
     "customerCare": [
+      { "name": "Track Order Status", "href": "/track-order" },
       { "name": "Contact & Support", "href": "/contact" },
       { "name": "Frequently Asked Questions", "href": "/about#faq" },
       { "name": "Delivery Policy & Rates", "href": "/about#shipping" },

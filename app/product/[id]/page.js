@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import productsData from "@/data/products.json";
+import fallbackProducts from "@/data/products.json";
+import { fetchProductByIdOrSlug, fetchRelatedProducts, normalizeProduct } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useCart } from "@/context/CartContext";
@@ -23,14 +24,52 @@ import toast from "react-hot-toast";
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const productId = params.id;
+  const productId = params?.id;
 
   const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed } = useCart();
 
-  const product = productsData.find((p) => p.id === productId) || productsData[0];
+  const initialProduct =
+    fallbackProducts.find((p) => p.id === productId || p.slug === productId) ||
+    fallbackProducts[0];
+
+  const [product, setProduct] = useState(() => normalizeProduct(initialProduct));
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+  const [loading, setLoading] = useState(false);
+
+  // Fetch product and related products from backend
+  useEffect(() => {
+    let isMounted = true;
+    async function loadProductData() {
+      if (!productId) return;
+      setLoading(true);
+      try {
+        const liveProd = await fetchProductByIdOrSlug(productId);
+        if (isMounted && liveProd) {
+          setProduct(liveProd);
+          setSelectedImageIdx(0);
+
+          const rel = await fetchRelatedProducts(
+            liveProd.categorySlug,
+            liveProd.id || liveProd.slug
+          );
+          if (isMounted && rel) {
+            setRelatedProducts(rel);
+          }
+        }
+      } catch (err) {
+        console.warn("ProductDetailPage: backend fetch error, using fallback", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadProductData();
+    return () => {
+      isMounted = false;
+    };
+  }, [productId]);
 
   useEffect(() => {
     if (product) {
@@ -38,22 +77,31 @@ export default function ProductDetailPage() {
     }
   }, [product]);
 
-  const isWishlisted = isInWishlist(product.id);
-  const price = product.discountedPrice || product.regularPrice;
-  const originalPrice = product.regularPrice;
+  const pIdentifier = product?.slug || product?.id || productId;
+  const isWishlisted = isInWishlist(pIdentifier) || (product?.id && isInWishlist(product.id));
+  const price =
+    typeof product?.price === "number"
+      ? product.price
+      : product?.discountedPrice || product?.regularPrice || 0;
+  const originalPrice =
+    typeof product?.originalPrice === "number"
+      ? product.originalPrice
+      : product?.regularPrice || price;
   const hasDiscount = originalPrice > price;
 
-  const images = product.images && product.images.length > 0 ? product.images : [product.image];
-
-  const relatedProducts = productsData
-    .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
-    .slice(0, 4);
+  const images =
+    product?.images && product.images.length > 0
+      ? product.images
+      : product?.image
+      ? [product.image]
+      : ["/images/placeholder.png"];
 
   const handleShare = () => {
+    if (typeof window === "undefined") return;
     if (navigator.share) {
       navigator.share({
-        title: product.name,
-        text: product.shortDescription,
+        title: product?.name,
+        text: product?.shortDescription,
         url: window.location.href,
       }).catch(() => {});
     } else {
@@ -301,10 +349,10 @@ export default function ProductDetailPage() {
                   The Craft of {product.name}
                 </h3>
                 <p className="text-xs sm:text-sm text-[#777D76] leading-relaxed">
-                  {product.fullDescription}
+                  {product.fullDescription || product.description}
                 </p>
                 <div className="mt-4 p-4 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] text-xs text-[#777D76]">
-                  Origin: <strong className="text-[#173F35]">{product.origin}</strong>
+                  Origin: <strong className="text-[#173F35]">{product.origin || "Bangladesh"}</strong>
                 </div>
               </div>
             )}
@@ -383,7 +431,7 @@ export default function ProductDetailPage() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {relatedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCard key={p.id || p.slug} product={p} />
               ))}
             </div>
           </div>

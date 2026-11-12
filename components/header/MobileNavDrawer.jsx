@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import categoriesData from "@/data/categories.json";
+import fallbackCategories from "@/data/categories.json";
+import { fetchCategories, normalizeCategory } from "@/lib/api";
 import siteData from "@/data/site.json";
 import {
   FiX,
@@ -16,7 +17,22 @@ import { useCart } from "@/context/CartContext";
 
 export default function MobileNavDrawer({ isOpen, onClose }) {
   const [categoriesOpen, setCategoriesOpen] = useState(true);
+  const [categories, setCategories] = useState(() => fallbackCategories.map(normalizeCategory));
   const { cartCount, wishlist, openSearch } = useCart();
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchCategories()
+      .then((cats) => {
+        if (isMounted && cats && cats.length > 0) {
+          setCategories(cats);
+        }
+      })
+      .catch(() => { });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -95,32 +111,34 @@ export default function MobileNavDrawer({ isOpen, onClose }) {
 
             {categoriesOpen && (
               <div className="mt-2 space-y-1.5 pt-1">
-                {categoriesData.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={`/category/${cat.slug}`}
-                    onClick={onClose}
-                    className="flex items-center gap-3 p-2 text-xs text-[#252A26] hover:text-[#173F35] hover:bg-white rounded-xl transition-all border border-transparent hover:border-[#E7E3D8]"
-                  >
-                    <div className="w-9 h-9 rounded-lg overflow-hidden bg-[#FAF7EF] flex-shrink-0 border border-[#E7E3D8]/80">
-                      <img
-                        src={cat.image}
-                        alt={cat.name}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold truncate">{cat.name}</span>
-                        <span className="text-[10px] text-[#829B76] font-medium ml-2 flex-shrink-0">
-                          {cat.productCount} items
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-[#777D76] truncate">{cat.sublabel}</p>
-                    </div>
-                  </Link>
-                ))}
+                  {
+                    categories.map((cat) => (
+                      <Link
+                        key={cat.id || cat.slug}
+                        href={`/category/${cat.slug}`}
+                        onClick={onClose}
+                        className="flex items-center gap-3 p-2 text-xs text-[#252A26] hover:text-[#173F35] hover:bg-white rounded-xl transition-all border border-transparent hover:border-[#E7E3D8]"
+                      >
+                        <div className="w-9 h-9 rounded-lg overflow-hidden bg-[#FAF7EF] flex-shrink-0 border border-[#E7E3D8]/80">
+                          <img
+                            src={cat.image}
+                            alt={cat.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold truncate">{cat.name}</span>
+                            <span className="text-[10px] text-[#829B76] font-medium ml-2 flex-shrink-0">
+                              {cat.productCount} items
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-[#777D76] truncate">{cat.sublabel}</p>
+                        </div>
+                      </Link>
+                    ))
+                  }
               </div>
             )}
           </div>
@@ -148,32 +166,40 @@ export default function MobileNavDrawer({ isOpen, onClose }) {
           >
             Contact & Banani Center
           </Link>
+
+          <Link
+            href="/track-order"
+            onClick={onClose}
+            className="block px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[#173F35] bg-[#173F35]/5 hover:bg-[#173F35]/10 rounded-lg font-bold"
+          >
+            Track Order Status
+          </Link>
         </div>
 
-          {/* Footer info */}
-          <div className="p-4 bg-white border-t border-[#E7E3D8] space-y-3">
-            <div className="flex items-center justify-between text-xs font-medium text-[#252A26]">
-              <Link
-                href="/wishlist"
-                onClick={onClose}
-                className="flex items-center gap-1.5 hover:text-[#173F35]"
-              >
-                <FiHeart size={14} /> Wishlist ({wishlist.length})
-              </Link>
-              <Link
-                href="/cart"
-                onClick={onClose}
-                className="flex items-center gap-1.5 hover:text-[#173F35]"
-              >
-                <FiShoppingBag size={14} /> Cart ({cartCount})
-              </Link>
-            </div>
+        {/* Footer info */}
+        <div className="p-4 bg-white border-t border-[#E7E3D8] space-y-3">
+          <div className="flex items-center justify-between text-xs font-medium text-[#252A26]">
+            <Link
+              href="/wishlist"
+              onClick={onClose}
+              className="flex items-center gap-1.5 hover:text-[#173F35]"
+            >
+              <FiHeart size={14} /> Wishlist ({wishlist.length})
+            </Link>
+            <Link
+              href="/cart"
+              onClick={onClose}
+              className="flex items-center gap-1.5 hover:text-[#173F35]"
+            >
+              <FiShoppingBag size={14} /> Cart ({cartCount})
+            </Link>
+          </div>
 
-            <div className="pt-2 border-t border-[#E7E3D8] text-[11px] text-[#777D76] text-center">
-              Hotline: <strong className="text-[#173F35]">{siteData.contact.hotline}</strong>
-            </div>
+          <div className="pt-2 border-t border-[#E7E3D8] text-[11px] text-[#777D76] text-center">
+            Hotline: <strong className="text-[#173F35]">{siteData.contact.hotline}</strong>
           </div>
         </div>
       </div>
-      );
+    </div>
+  );
 }

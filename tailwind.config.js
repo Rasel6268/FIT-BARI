@@ -27,8 +27,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Plus Jakarta Sans", "Manrope", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        sans: ["var(--font-sans)", "Plus Jakarta Sans", "Hind Siliguri", "Noto Sans Bengali", "Manrope", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
         display: ["var(--font-display)", "Playfair Display", "Georgia", "serif"],
+        bengali: ["Hind Siliguri", "Noto Sans Bengali", "sans-serif"],
       },
       letterSpacing: {
         widest: "0.2em",
