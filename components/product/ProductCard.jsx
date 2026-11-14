@@ -19,6 +19,9 @@ export default function ProductCard({ product }) {
       ? product.originalPrice
       : product.regularPrice || price;
   const hasDiscount = originalPrice > price;
+  const discountPct =
+    product.discountPercentage ||
+    (hasDiscount ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0);
 
   return (
     <div className="group relative bg-white rounded-2xl border border-[#E7E3D8] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-[#173F35]/40 hover:shadow-subtle">
@@ -27,7 +30,7 @@ export default function ProductCard({ product }) {
         {/* Savings Pill */}
         {hasDiscount && (
           <span className="absolute top-3 left-3 z-10 text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-[#173F35] text-[#F7F5ED] shadow-sm">
-            Save {product.discountPercentage}%
+            Save {discountPct}%
           </span>
         )}
 
@@ -47,33 +50,33 @@ export default function ProductCard({ product }) {
         </button>
 
         {/* Product Image */}
-          <Link href={`/product/${productId}`} className="block w-full h-full">
-            <img
-              src={product.images?.[0] || product.image}
-              alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out editorial-img"
-              loading="lazy"
-            />
-          </Link>
+        <Link href={`/product/${productId}`} className="block w-full h-full">
+          <img
+            src={product.images?.[0] || product.image || "/images/placeholder.png"}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out editorial-img"
+            loading="lazy"
+          />
+        </Link>
 
-          {/* Quick View Drawer on Desktop Hover */}
-          <div className="absolute inset-x-3 bottom-3 hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
-            <button
-              onClick={() => openQuickView(product)}
-              className="flex-1 py-2 px-3 rounded-full bg-white/95 backdrop-blur-md text-[#252A26] hover:text-[#173F35] hover:bg-white text-xs font-semibold shadow-sm border border-[#E7E3D8] transition-all flex items-center justify-center gap-1.5 active:scale-95"
-            >
-              <FiEye size={13} />
-              <span>Quick View</span>
-            </button>
-            <button
-              onClick={() => addToCart(product, 1)}
-              className="w-9 h-9 rounded-full bg-[#173F35] text-[#F7F5ED] hover:bg-[#0F2B24] flex items-center justify-center shadow-sm transition-all active:scale-95"
-              title="Quick Add to Cart"
-              aria-label="Quick Add to Cart"
-            >
-              <FiShoppingBag size={14} />
-            </button>
-          </div>
+        {/* Quick View Drawer on Desktop Hover */}
+        <div className="absolute inset-x-3 bottom-3 hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
+          <button
+            onClick={() => openQuickView(product)}
+            className="flex-1 py-2 px-3 rounded-full bg-white/95 backdrop-blur-md text-[#252A26] hover:text-[#173F35] hover:bg-white text-xs font-semibold shadow-sm border border-[#E7E3D8] transition-all flex items-center justify-center gap-1.5 active:scale-95"
+          >
+            <FiEye size={13} />
+            <span>Quick View</span>
+          </button>
+          <button
+            onClick={() => addToCart(product, 1)}
+            className="w-9 h-9 rounded-full bg-[#173F35] text-[#F7F5ED] hover:bg-[#0F2B24] flex items-center justify-center shadow-sm transition-all active:scale-95"
+            title="Quick Add to Cart"
+            aria-label="Quick Add to Cart"
+          >
+            <FiShoppingBag size={14} />
+          </button>
+        </div>
       </div>
 
       {/* Content Area */}
@@ -92,20 +95,20 @@ export default function ProductCard({ product }) {
           </div>
 
           {/* Product Title */}
-            <Link href={`/product/${productId}`} className="block">
-              <h3 className="text-sm font-semibold text-[#252A26] hover:text-[#173F35] transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
-                {product.name}
-              </h3>
-            </Link>
+          <Link href={`/product/${productId}`} className="block">
+            <h3 className="text-sm font-semibold text-[#252A26] hover:text-[#173F35] transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
+              {product.name}
+            </h3>
+          </Link>
 
-            {/* Pack info & availability */}
-            <div className="mt-2.5 flex items-center justify-between text-[11px] text-[#777D76]">
-              <span>{product.weight}</span>
-              <span className="text-[#829B76] font-medium flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#829B76]" />
-                In Stock
-              </span>
-            </div>
+          {/* Pack info & availability */}
+          <div className="mt-2.5 flex items-center justify-between text-[11px] text-[#777D76]">
+            <span>{product.weight}</span>
+            <span className="text-[#829B76] font-medium flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#829B76]" />
+              In Stock
+            </span>
+          </div>
         </div>
 
         {/* Pricing & Add Action */}

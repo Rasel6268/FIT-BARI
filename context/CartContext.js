@@ -93,93 +93,93 @@ export function CartProvider({ children }) {
 
     setCart((prev) => {
       const existingIndex = prev.findIndex(
-          (item) => getProdId(item.product) === prodId && item.selectedWeight === weight
+        (item) => getProdId(item.product) === prodId && item.selectedWeight === weight
       );
 
-  if (existingIndex > -1) {
-    const next = [...prev];
-    next[existingIndex] = {
-      ...next[existingIndex],
-      quantity: next[existingIndex].quantity + quantity,
-    };
-    return next;
-  } else {
-    return [...prev, { product, quantity, selectedWeight: weight }];
-  }
-});
+      if (existingIndex > -1) {
+        const next = [...prev];
+        next[existingIndex] = {
+          ...next[existingIndex],
+          quantity: next[existingIndex].quantity + quantity,
+        };
+        return next;
+      } else {
+        return [...prev, { product, quantity, selectedWeight: weight }];
+      }
+    });
 
-toast.success(
-  `Added "${(product.name || "").slice(0, 24)}..." to your cart!`,
-  {
-    icon: "🛒",
-    style: {
-      borderRadius: "10px",
-      background: "#173F35",
-      color: "#FAF7EF",
-      border: "1px solid #D9A441",
-    },
-  }
-);
+    toast.success(
+      `Added "${(product.name || "").slice(0, 24)}..." to your cart!`,
+      {
+        icon: "🛒",
+        style: {
+          borderRadius: "10px",
+          background: "#173F35",
+          color: "#FAF7EF",
+          border: "1px solid #D9A441",
+        },
+      }
+    );
   };
 
-const removeFromCart = (productId, selectedWeight) => {
-  const targetId = String(productId);
-  setCart((prev) =>
-    prev.filter(
-      (item) =>
+  const removeFromCart = (productId, selectedWeight) => {
+    const targetId = String(productId);
+    setCart((prev) =>
+      prev.filter(
+        (item) =>
           !(
-        getProdId(item.product) === targetId &&
-        (!selectedWeight || item.selectedWeight === selectedWeight)
+            getProdId(item.product) === targetId &&
+            (!selectedWeight || item.selectedWeight === selectedWeight)
+          )
       )
-    )
-  );
-  toast("Item removed from cart", {
-    icon: "🗑️",
-    style: {
-      borderRadius: "10px",
-      background: "#252B28",
-      color: "#FAF7EF",
-    },
-  });
-};
-
-const updateQuantity = (productId, selectedWeight, newQty) => {
-  if (newQty <= 0) {
-    removeFromCart(productId, selectedWeight);
-    return;
-  }
-  const targetId = String(productId);
-  setCart((prev) =>
-    prev.map((item) => {
-        if (getProdId(item.product) === targetId && item.selectedWeight === selectedWeight) {
-          return { ...item, quantity: newQty };
-        }
-        return item;
-      })
-  );
-};
-
-const clearCart = () => {
-  setCart([]);
-};
-
-const toggleWishlist = (product) => {
-  if (!product) return;
-  const prodId = getProdId(product);
-  const exists = wishlist.some((item) => getProdId(item) === prodId);
-
-  if (exists) {
-    setWishlist((prev) => prev.filter((item) => getProdId(item) !== prodId));
-    toast("Removed from Wishlist", {
-      icon: "🤍",
+    );
+    toast("Item removed from cart", {
+      icon: "🗑️",
       style: {
         borderRadius: "10px",
         background: "#252B28",
         color: "#FAF7EF",
       },
     });
-  } else {
-    setWishlist((prev) => [...prev, product]);
+  };
+
+  const updateQuantity = (productId, selectedWeight, newQty) => {
+    if (newQty <= 0) {
+      removeFromCart(productId, selectedWeight);
+      return;
+    }
+    const targetId = String(productId);
+    setCart((prev) =>
+      prev.map((item) => {
+        if (getProdId(item.product) === targetId && item.selectedWeight === selectedWeight) {
+          return { ...item, quantity: newQty };
+        }
+        return item;
+      })
+    );
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const toggleWishlist = (product) => {
+    if (!product) return;
+    const prodId = getProdId(product);
+    const exists = wishlist.some((item) => getProdId(item) === prodId);
+
+    if (exists) {
+      setWishlist((prev) => prev.filter((item) => getProdId(item) !== prodId));
+      toast("Removed from Wishlist", {
+        icon: "🤍",
+        style: {
+          borderRadius: "10px",
+          background: "#252B28",
+          color: "#FAF7EF",
+        },
+      });
+    } else {
+      setWishlist((prev) => [...prev, product]);
       toast.success(`Saved "${(product.name || "").slice(0, 22)}..." to Wishlist`, {
         icon: "❤️",
         style: {
@@ -193,8 +193,15 @@ const toggleWishlist = (product) => {
   };
 
   const isInWishlist = (productId) => {
+    if (!productId) return false;
     const targetId = String(productId);
-    return wishlist.some((item) => getProdId(item) === targetId);
+    return wishlist.some(
+      (item) =>
+        getProdId(item) === targetId ||
+        String(item.id || "") === targetId ||
+        String(item.slug || "") === targetId ||
+        String(item._id || "") === targetId
+    );
   };
 
   const addToRecentlyViewed = (product) => {

@@ -3,22 +3,22 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import fallbackProducts from "@/data/products.json";
 import { fetchProductByIdOrSlug, fetchRelatedProducts, normalizeProduct } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { useCart } from "@/context/CartContext";
-import { 
-  FiStar, 
-  FiShoppingBag, 
-  FiHeart, 
-  FiCheck, 
-  FiShield, 
-  FiTruck, 
-  FiRefreshCw, 
-  FiPlus, 
-  FiMinus, 
-  FiShare2 
+import {
+  FiStar,
+  FiShoppingBag,
+  FiHeart,
+  FiCheck,
+  FiShield,
+  FiTruck,
+  FiRefreshCw,
+  FiPlus,
+  FiMinus,
+  FiShare2,
+  FiArrowLeft
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 
@@ -28,16 +28,12 @@ export default function ProductDetailPage() {
 
   const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed } = useCart();
 
-  const initialProduct =
-    fallbackProducts.find((p) => p.id === productId || p.slug === productId) ||
-    fallbackProducts[0];
-
-  const [product, setProduct] = useState(() => normalizeProduct(initialProduct));
+  const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Fetch product and related products from backend
   useEffect(() => {
@@ -93,8 +89,8 @@ export default function ProductDetailPage() {
     product?.images && product.images.length > 0
       ? product.images
       : product?.image
-      ? [product.image]
-      : ["/images/placeholder.png"];
+        ? [product.image]
+        : ["/images/placeholder.png"];
 
   const handleShare = () => {
     if (typeof window === "undefined") return;
@@ -103,17 +99,65 @@ export default function ProductDetailPage() {
         title: product?.name,
         text: product?.shortDescription,
         url: window.location.href,
-      }).catch(() => {});
+      }).catch(() => { });
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Product link copied to clipboard");
     }
   };
 
+  if (loading) {
+    return (
+      <div className="bg-[#F7F5ED] min-h-screen py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-3xl border border-[#E7E3D8] p-8 sm:p-12 animate-pulse space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-6 aspect-square bg-[#F7F5ED] rounded-2xl" />
+              <div className="lg:col-span-6 space-y-4">
+                <div className="h-6 bg-[#F7F5ED] rounded w-1/4" />
+                <div className="h-10 bg-[#F7F5ED] rounded w-3/4" />
+                <div className="h-8 bg-[#F7F5ED] rounded w-1/3" />
+                <div className="h-24 bg-[#F7F5ED] rounded w-full" />
+                <div className="h-12 bg-[#F7F5ED] rounded w-1/2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="bg-[#F7F5ED] min-h-screen py-20">
+        <div className="max-w-md mx-auto px-4 text-center">
+          <div className="bg-white rounded-3xl border border-[#E7E3D8] p-10 shadow-subtle space-y-5">
+            <div className="w-16 h-16 rounded-full bg-[#F7F5ED] border border-[#E7E3D8] flex items-center justify-center mx-auto text-[#173F35]">
+              <FiShoppingBag size={28} />
+            </div>
+            <h2 className="text-2xl font-normal font-editorial text-[#173F35]">
+              Product Not Found
+            </h2>
+            <p className="text-xs text-[#777D76] leading-relaxed">
+              The product you are looking for does not exist or has been removed from the pantry catalog.
+            </p>
+            <Link
+              href="/shop"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#173F35] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#0F2B24] transition-all"
+            >
+              <FiArrowLeft size={14} />
+              <span>Back to Pantry Catalog</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Breadcrumbs */}
         <Breadcrumbs
           items={[
@@ -126,7 +170,7 @@ export default function ProductDetailPage() {
         {/* Main Product Showcase Card */}
         <div className="bg-white rounded-3xl border border-[#E7E3D8] p-6 sm:p-10 lg:p-12 shadow-subtle mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-            
+
             {/* Gallery Column (6 cols) */}
             <div className="lg:col-span-6 space-y-4">
               <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#F7F5ED] border border-[#E7E3D8]">
@@ -157,11 +201,10 @@ export default function ProductDetailPage() {
                     <button
                       key={idx}
                       onClick={() => setSelectedImageIdx(idx)}
-                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all ${
-                        selectedImageIdx === idx
+                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all ${selectedImageIdx === idx
                           ? "border-[#173F35] shadow-sm"
                           : "border-transparent opacity-60 hover:opacity-100"
-                      }`}
+                        }`}
                     >
                       <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
                     </button>
@@ -267,11 +310,10 @@ export default function ProductDetailPage() {
 
                   <button
                     onClick={() => toggleWishlist(product)}
-                    className={`w-11 h-10 rounded-full border flex items-center justify-center transition-colors ${
-                      isWishlisted
+                    className={`w-11 h-10 rounded-full border flex items-center justify-center transition-colors ${isWishlisted
                         ? "border-[#173F35] bg-[#173F35] text-[#D6A54A]"
                         : "border-[#E7E3D8] hover:border-[#173F35] text-[#777D76]"
-                    }`}
+                      }`}
                   >
                     <FiHeart size={16} className={isWishlisted ? "fill-current" : ""} />
                   </button>
@@ -302,41 +344,37 @@ export default function ProductDetailPage() {
           <div className="flex border-b border-[#E7E3D8] bg-[#F7F5ED]/60 overflow-x-auto no-scrollbar">
             <button
               onClick={() => setActiveTab("description")}
-              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
-                activeTab === "description"
+              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${activeTab === "description"
                   ? "border-[#173F35] text-[#173F35] bg-white"
                   : "border-transparent text-[#777D76] hover:text-[#173F35]"
-              }`}
+                }`}
             >
               Description & Origin
             </button>
             <button
               onClick={() => setActiveTab("nutrition")}
-              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
-                activeTab === "nutrition"
+              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${activeTab === "nutrition"
                   ? "border-[#173F35] text-[#173F35] bg-white"
                   : "border-transparent text-[#777D76] hover:text-[#173F35]"
-              }`}
+                }`}
             >
               Nutrition & Ingredients
             </button>
             <button
               onClick={() => setActiveTab("usage")}
-              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
-                activeTab === "usage"
+              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${activeTab === "usage"
                   ? "border-[#173F35] text-[#173F35] bg-white"
                   : "border-transparent text-[#777D76] hover:text-[#173F35]"
-              }`}
+                }`}
             >
               Usage Protocol
             </button>
             <button
               onClick={() => setActiveTab("reviews")}
-              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
-                activeTab === "reviews"
+              className={`py-4 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${activeTab === "reviews"
                   ? "border-[#173F35] text-[#173F35] bg-white"
                   : "border-transparent text-[#777D76] hover:text-[#173F35]"
-              }`}
+                }`}
             >
               Reviews ({product.reviewCount})
             </button>

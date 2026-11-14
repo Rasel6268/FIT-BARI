@@ -7,7 +7,7 @@ import CheckoutModal from "@/components/cart/CheckoutModal";
 import QuickViewModal from "@/components/product/QuickViewModal";
 import SearchModal from "@/components/search/SearchModal";
 import BackToTop from "@/components/ui/BackToTop";
-import { Toaster } from "react-hot-toast";
+import ToastProvider from "@/components/ui/ToastProvider";
 
 export const viewport = {
   themeColor: "#173F35",
@@ -37,18 +37,7 @@ export default function RootLayout({ children }) {
       <body className="bg-brand-bg text-brand-text min-h-screen flex flex-col antialiased selection:bg-[#D9A441] selection:text-[#173F35]">
         <CartProvider>
           {/* Notification Toaster */}
-          <Toaster
-            position="bottom-left"
-            toastOptions={{
-              duration: 3500,
-              style: {
-                borderRadius: "12px",
-                padding: "12px 16px",
-                fontSize: "13px",
-                fontWeight: "600",
-              },
-            }}
-          />
+          <ToastProvider />
 
           {/* Sticky Header with mega menu & announcement bar */}
           <Header />

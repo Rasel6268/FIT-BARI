@@ -4,8 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import fallbackCategories from "@/data/categories.json";
-import fallbackProducts from "@/data/products.json";
-import comboPackages from "@/data/comboPackages.json";
 import { fetchProducts, fetchCategories, normalizeProduct, normalizeCategory } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -17,51 +15,50 @@ export default function CategoryPage() {
   const slug = params.slug;
   const { addToCart } = useCart();
 
-    const [categories, setCategories] = useState(() => fallbackCategories.map(normalizeCategory));
-    const [products, setProducts] = useState(() => fallbackProducts.map(normalizeProduct));
-    const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState(() => fallbackCategories.map(normalizeCategory));
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-    let isMounted = true;
-    async function loadData() {
-      setLoading(true);
-      try {
-        const [catRes, prodRes] = await Promise.allSettled([
-          fetchCategories(),
-          fetchProducts({ category: slug }),
-        ]);
+      let isMounted = true;
+      async function loadData() {
+        setLoading(true);
+        try {
+          const [catRes, prodRes] = await Promise.allSettled([
+            fetchCategories(),
+            fetchProducts({ category: slug }),
+          ]);
 
-        if (isMounted) {
-          if (catRes.status === "fulfilled" && catRes.value?.length > 0) {
-            setCategories(catRes.value);
-          }
-          if (prodRes.status === "fulfilled" && prodRes.value.products?.length > 0) {
-            setProducts(prodRes.value.products);
+          if (isMounted) {
+            if (catRes.status === "fulfilled" && catRes.value?.length > 0) {
+              setCategories(catRes.value);
+            }
+              if (prodRes.status === "fulfilled" && prodRes.value) {
+                setProducts(prodRes.value.products || []);
+              }
+            }
+          } catch (err) {
+            console.warn("CategoryPage: backend fetch error", err);
+          } finally {
+            if (isMounted) setLoading(false);
           }
         }
-      } catch (err) {
-        console.warn("CategoryPage: backend fetch error, using fallback", err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
     loadData();
-    return () => {
-      isMounted = false;
+        return () => {
+          isMounted = false;
+        };
+      }, [slug]);
+
+    const category = categories.find((c) => c.slug === slug) || {
+      name: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) : "Collection",
+      sublabel: "Curated Collection",
+      description: "Explore our single-origin harvests and lab-verified sports nutrition.",
+      image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=85",
+      productCount: 0,
     };
-  }, [slug]);
 
-  const category = categories.find((c) => c.slug === slug) || {
-    name: slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-    sublabel: "Curated Collection",
-    description: "Explore our single-origin harvests and lab-verified sports nutrition.",
-    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=85",
-    productCount: 4,
-  };
-
-  const isComboCategory = slug === "combo-packages";
-  const categoryProducts = products.filter(
-    (p) => (p.categorySlug || "").toLowerCase() === (slug || "").toLowerCase()
+    const categoryProducts = products.filter(
+        (p) => (p.categorySlug || "").toLowerCase() === (slug || "").toLowerCase() || products.length > 0
   );
 
   return (
@@ -123,142 +120,79 @@ export default function CategoryPage() {
           </div>
         </div>
 
-        {/* Content: Bundles vs Products */}
-        {isComboCategory ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {comboPackages.map((combo) => (
-              <div
-                key={combo.id}
-                className="bg-white rounded-3xl overflow-hidden border border-[#E7E3D8] shadow-subtle hover:shadow-elevate transition-all duration-300 flex flex-col justify-between"
-              >
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#EFECE1]">
-                  <img
-                    src={combo.image}
-                    alt={combo.name}
-                    className="w-full h-full object-cover editorial-img"
-                  />
-                  <span className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#173F35] text-[#F7F5ED]">
-                    {combo.savingsBadge}
-                  </span>
-                </div>
-
-                <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-5">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#777D76] block mb-1">
-                      {combo.tag}
-                    </span>
-                    <h3 className="text-xl sm:text-2xl font-normal font-editorial text-[#173F35] mb-2">
-                      {combo.name}
-                    </h3>
-                    <p className="text-xs text-[#777D76] leading-relaxed mb-4">
-                      {combo.description}
-                    </p>
-
-                    <div className="space-y-1.5 py-3 border-y border-[#E7E3D8]/80 text-xs">
-                      {combo.includedProducts.map((prod, i) => (
-                        <div key={i} className="flex items-center gap-2 text-[#252A26]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#829B76]" />
-                          <span className="truncate">{prod}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-4 pt-2">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-[#173F35]">
-                        ৳{combo.discountedPrice.toLocaleString()}
-                      </span>
-                      <span className="text-xs line-through text-[#777D76]">
-                        ৳{combo.originalPrice.toLocaleString()}
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={() =>
-                        addToCart(
-                          {
-                            id: combo.id,
-                            name: combo.name,
-                            discountedPrice: combo.discountedPrice,
-                            regularPrice: combo.originalPrice,
-                            images: [combo.image],
-                            weight: "Curated Set",
-                          },
-                          1
-                        )
-                      }
-                      className="px-6 py-2.5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-sm"
-                    >
-                      <FiShoppingBag size={13} />
-                      <span>Add Bundle</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              {/* Content: Products */ }
+        {
+                loading?(
+          <div className = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6" >
+                    { [...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-2xl border border-[#E7E3D8] p-4 space-y-4 animate-pulse"
+            >
+              <div className="aspect-square bg-[#F7F5ED] rounded-xl" />
+              <div className="h-4 bg-[#F7F5ED] rounded w-3/4" />
+              <div className="h-3 bg-[#F7F5ED] rounded w-1/2" />
+              <div className="h-5 bg-[#F7F5ED] rounded w-1/3" />
+            </div>
             ))}
           </div>
-        ) : (
-          <div>
-            {categoryProducts.length === 0 ? (
-              <div className="bg-white rounded-3xl p-12 text-center border border-[#E7E3D8] shadow-subtle space-y-4">
-                <h3 className="text-base font-semibold text-[#173F35]">
-                  Seasonal harvest in preparation
-                </h3>
-                <p className="text-xs text-[#777D76] max-w-sm mx-auto">
-                  New laboratory batches are currently being verified for this collection.
-                </p>
-                <Link
-                  href="/shop"
-                  className="inline-block px-6 py-2.5 rounded-full bg-[#173F35] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider"
-                >
-                  Return to Shop
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {categoryProducts.map((product) => (
-                  <ProductCard key={product.id || product.slug} product={product} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Cross-Collection Discovery */}
-        <div className="mt-20 pt-12 border-t border-[#E7E3D8]">
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#777D76]">
-              OTHER COLLECTIONS
-            </span>
-            <Link href="/shop" className="text-xs font-semibold text-[#173F35] hover:text-[#829B76]">
-              View All &rarr;
+        ) : categoryProducts.length === 0 ? (
+          <div className="bg-white rounded-3xl p-12 text-center border border-[#E7E3D8] shadow-subtle space-y-4">
+            <h3 className="text-base font-semibold text-[#173F35]">
+              Seasonal harvest in preparation
+            </h3>
+            <p className="text-xs text-[#777D76] max-w-sm mx-auto">
+              New laboratory batches are currently being verified for this collection.
+            </p>
+            <Link
+              href="/shop"
+              className="inline-block px-6 py-2.5 rounded-full bg-[#173F35] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider"
+            >
+              Return to Shop
             </Link>
           </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-            {categories
-              .filter((c) => c.slug !== slug)
-              .map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/category/${c.slug}`}
-                  className="p-3 bg-white rounded-2xl border border-[#E7E3D8] hover:border-[#173F35] text-center transition-all group"
-                >
-                  <img
-                    src={c.image}
-                    alt={c.name}
-                    className="w-12 h-12 rounded-lg object-cover mx-auto mb-2 group-hover:scale-105 transition-transform editorial-img"
-                  />
-                  <span className="text-xs font-semibold text-[#252A26] group-hover:text-[#173F35] block truncate">
-                    {c.name}
-                  </span>
-                </Link>
+        ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {categoryProducts.map((product) => (
+                <ProductCard key={product.id || product.slug} product={product} />
               ))}
-          </div>
-        </div>
+            </div>
+        )}
 
-      </div>
+            {/* Cross-Collection Discovery */}
+            <div className="mt-20 pt-12 border-t border-[#E7E3D8]">
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#777D76]">
+                  OTHER COLLECTIONS
+                </span>
+                <Link href="/shop" className="text-xs font-semibold text-[#173F35] hover:text-[#829B76]">
+                  View All &rarr;
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                {categories
+                  .filter((c) => c.slug !== slug)
+                  .map((c) => (
+                    <Link
+                      key={c.id}
+                      href={`/category/${c.slug}`}
+                      className="p-3 bg-white rounded-2xl border border-[#E7E3D8] hover:border-[#173F35] text-center transition-all group"
+                    >
+                      <img
+                        src={c.image}
+                        alt={c.name}
+                        className="w-12 h-12 rounded-lg object-cover mx-auto mb-2 group-hover:scale-105 transition-transform editorial-img"
+                      />
+                      <span className="text-xs font-semibold text-[#252A26] group-hover:text-[#173F35] block truncate">
+                        {c.name}
+                      </span>
+                    </Link>
+                  ))}
+              </div>
+            </div>
+
+          </div>
     </div>
-  );
+      );
 }

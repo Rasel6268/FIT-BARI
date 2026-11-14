@@ -34,7 +34,10 @@ export default function QuickViewModal() {
       : product.regularPrice || price;
   const hasDiscount = originalPrice > price;
 
-  const images = product.images && product.images.length > 0 ? product.images : [product.image];
+  const images =
+    product.images && product.images.length > 0
+      ? product.images
+      : [product.image || "/images/placeholder.png"];
 
   const handleAddToCart = () => {
     addToCart(product, quantity);

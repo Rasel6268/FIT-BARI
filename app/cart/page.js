@@ -139,24 +139,28 @@ const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
               {/* Items Card List */}
               <div className="space-y-3">
                 {cart.map((item) => {
-                  const itemPrice = item.product.discountedPrice || item.product.regularPrice;
+                  const pId = item.product.slug || item.product.id || item.product._id;
+                  const itemPrice =
+                    typeof item.product.price === "number"
+                      ? item.product.price
+                      : item.product.discountedPrice || item.product.regularPrice || 0;
                   const itemTotal = itemPrice * item.quantity;
 
                   return (
                     <div
-                      key={`${item.product.id}-${item.selectedWeight}`}
+                      key={`${pId}-${item.selectedWeight}`}
                       className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E7E3D8] shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-20 h-20 rounded-xl overflow-hidden bg-[#F7F5ED] border border-[#E7E3D8] flex-shrink-0">
                           <img
-                            src={item.product.images?.[0] || item.product.image}
+                            src={item.product.images?.[0] || item.product.image || "/images/placeholder.png"}
                             alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="min-w-0">
-                          <Link href={`/product/${item.product.id}`}>
+                          <Link href={`/product/${pId}`}>
                             <h3 className="text-sm font-semibold text-[#173F35] hover:text-[#829B76] transition-colors leading-snug">
                               {item.product.name}
                             </h3>
@@ -175,7 +179,7 @@ const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
                         <div className="flex items-center border border-[#E7E3D8] rounded-full overflow-hidden bg-[#F7F5ED] h-9">
                           <button
                             onClick={() =>
-                              updateQuantity(item.product.id, item.selectedWeight, item.quantity - 1)
+                              updateQuantity(pId, item.selectedWeight, item.quantity - 1)
                             }
                             className="w-8 h-full flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
                             aria-label="Decrease quantity"
@@ -187,7 +191,7 @@ const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(item.product.id, item.selectedWeight, item.quantity + 1)
+                              updateQuantity(pId, item.selectedWeight, item.quantity + 1)
                             }
                             className="w-8 h-full flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
                             aria-label="Increase quantity"
@@ -201,7 +205,7 @@ const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
                         </span>
 
                         <button
-                          onClick={() => removeFromCart(item.product.id, item.selectedWeight)}
+                          onClick={() => removeFromCart(pId, item.selectedWeight)}
                           className="text-[#777D76] hover:text-red-600 p-1.5 transition-colors"
                           title="Remove item"
                           aria-label="Remove item"

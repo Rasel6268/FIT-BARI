@@ -78,8 +78,8 @@ export default function CartDrawer() {
           <div className="w-full bg-[#F7F5ED] h-1.5 rounded-full overflow-hidden border border-[#E7E3D8]/80">
             <div
               className={`h-full transition-all duration-500 rounded-full ${freeDeliveryProgress >= 100
-                  ? "bg-[#173F35]"
-                  : "bg-[#829B76]"
+                ? "bg-[#173F35]"
+                : "bg-[#829B76]"
                 }`}
               style={{ width: `${freeDeliveryProgress}%` }}
             />
@@ -120,7 +120,7 @@ export default function CartDrawer() {
                 >
                   <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#F7F5ED] flex-shrink-0 border border-[#E7E3D8]/80">
                     <img
-                      src={item.product.images?.[0] || item.product.image}
+                      src={item.product.images?.[0] || item.product.image || "/images/placeholder.png"}
                       alt={item.product.name}
                       className="w-full h-full object-cover"
                     />
@@ -151,87 +151,87 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQuantity(prodId, item.selectedWeight, item.quantity - 1)
                           }
-                        className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
-                        aria-label="Decrease quantity"
+                          className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
+                          aria-label="Decrease quantity"
                         >
-                        <FiMinus size={10} />
-                      </button>
-                      <span className="w-6 text-center text-xs font-bold text-[#173F35]">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() =>
+                          <FiMinus size={10} />
+                        </button>
+                        <span className="w-6 text-center text-xs font-bold text-[#173F35]">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() =>
                             updateQuantity(prodId, item.selectedWeight, item.quantity + 1)
                           }
-                      className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
-                      aria-label="Increase quantity"
+                          className="w-6 h-6 flex items-center justify-center text-[#252A26] hover:bg-white transition-colors"
+                          aria-label="Increase quantity"
                         >
-                      <FiPlus size={10} />
-                    </button>
-                  </div>
+                          <FiPlus size={10} />
+                        </button>
+                      </div>
 
-                  <span className="text-xs font-bold text-[#173F35]">
-                    ৳{itemTotal.toLocaleString()}
-                  </span>
-                </div>
+                      <span className="text-xs font-bold text-[#173F35]">
+                        ৳{itemTotal.toLocaleString()}
+                      </span>
+                    </div>
                   </div>
-      </div>
-      );
+                </div>
+              );
             })
           )}
-    </div>
-
-        {/* Footer Summary & Checkout */ }
-  {
-    cart.length > 0 && (
-      <div className="p-5 bg-white border-t border-[#E7E3D8] space-y-3">
-        <div className="space-y-1.5 text-xs">
-          <div className="flex justify-between text-[#777D76]">
-            <span>Pantry Subtotal</span>
-            <span className="font-semibold text-[#252A26]">
-              ৳{cartSubtotal.toLocaleString()}
-            </span>
-          </div>
-          <div className="flex justify-between text-[#777D76]">
-            <span>Nationwide Shipping</span>
-            <span className="font-semibold text-[#829B76]">
-              {amountNeededForFreeDelivery === 0 ? "FREE" : "৳80 (Dhaka) / ৳130 (Outside)"}
-            </span>
-          </div>
-          <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
-            <span>Estimated Total</span>
-            <span className="text-base text-[#173F35]">
-              ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : 80)).toLocaleString()}
-            </span>
-          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5 pt-1">
-          <Link
-            href="/cart"
-            onClick={closeCart}
-            className="h-11 px-4 rounded-full border border-[#E7E3D8] hover:border-[#173F35] active:scale-[0.98] text-[#173F35] font-semibold text-xs uppercase tracking-wider flex items-center justify-center text-center transition-colors"
-          >
-            View Cart
-          </Link>
-          <button
-            onClick={() => {
-              closeCart();
-              openCheckoutModal();
-            }}
-            className="h-11 px-4 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-[0.98] text-[#F7F5ED] font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#173F35]"
-          >
-            <span>Checkout</span>
-            <FiArrowRight size={13} />
-          </button>
-        </div>
+        {/* Footer Summary & Checkout */}
+        {
+          cart.length > 0 && (
+            <div className="p-5 bg-white border-t border-[#E7E3D8] space-y-3">
+              <div className="space-y-1.5 text-xs">
+                <div className="flex justify-between text-[#777D76]">
+                  <span>Pantry Subtotal</span>
+                  <span className="font-semibold text-[#252A26]">
+                    ৳{cartSubtotal.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between text-[#777D76]">
+                  <span>Nationwide Shipping</span>
+                  <span className="font-semibold text-[#829B76]">
+                    {amountNeededForFreeDelivery === 0 ? "FREE" : "৳80 (Dhaka) / ৳130 (Outside)"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
+                  <span>Estimated Total</span>
+                  <span className="text-base text-[#173F35]">
+                    ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : 80)).toLocaleString()}
+                  </span>
+                </div>
+              </div>
 
-        <p className="text-[10px] text-center text-[#777D76]">
-          Verified genuine batches • Cash on delivery supported nationwide
-        </p>
-      </div>
-    )
-  }
+              <div className="grid grid-cols-2 gap-2.5 pt-1">
+                <Link
+                  href="/cart"
+                  onClick={closeCart}
+                  className="h-11 px-4 rounded-full border border-[#E7E3D8] hover:border-[#173F35] active:scale-[0.98] text-[#173F35] font-semibold text-xs uppercase tracking-wider flex items-center justify-center text-center transition-colors"
+                >
+                  View Cart
+                </Link>
+                <button
+                  onClick={() => {
+                    closeCart();
+                    openCheckoutModal();
+                  }}
+                  className="h-11 px-4 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-[0.98] text-[#F7F5ED] font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#173F35]"
+                >
+                  <span>Checkout</span>
+                  <FiArrowRight size={13} />
+                </button>
+              </div>
+
+              <p className="text-[10px] text-center text-[#777D76]">
+                Verified genuine batches • Cash on delivery supported nationwide
+              </p>
+            </div>
+          )
+        }
       </div >
     </div >
   );
