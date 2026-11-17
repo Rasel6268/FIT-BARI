@@ -109,14 +109,12 @@ export default function Header() {
                   <FiMenu size={22} />
                 </button>
 
-              <Link href="/" className="flex items-baseline gap-2 group flex-shrink-0 flex-nowrap">
-                <span className="text-2xl sm:text-[26px] font-bold tracking-tight text-[#173F35] font-editorial whitespace-nowrap">
-                  FIT BARI
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D6A54A] -mb-1 flex-shrink-0" />
-                <span className="hidden xl:inline text-[10px] uppercase tracking-[0.2em] text-[#777D76] font-semibold ml-2 pl-3 border-l border-[#E7E3D8] whitespace-nowrap flex-shrink-0">
-                  Pure Nutrition
-                </span>
+              <Link href="/" className="flex items-center group flex-shrink-0 flex-nowrap">
+                <img
+                  src="/images/logo.png"
+                  alt="FIT BARI - Pure Nutrition"
+                  className="h-9 sm:h-10 lg:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+                />
               </Link>
             </div>
 

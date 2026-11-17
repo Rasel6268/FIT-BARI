@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "predev": "node -e \"const fs = require('fs'); if (fs.existsSync('.next/BUILD_ID')) fs.rmSync('.next', { recursive: true, force: true });\"",
     "clean": "node -e \"const fs = require('fs'); fs.rmSync('.next', { recursive: true, force: true });\"",
     "build": "next build",
     "start": "next start",

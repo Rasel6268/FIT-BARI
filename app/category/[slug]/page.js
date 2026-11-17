@@ -57,9 +57,19 @@ export default function CategoryPage() {
       productCount: 0,
     };
 
-    const categoryProducts = products.filter(
-        (p) => (p.categorySlug || "").toLowerCase() === (slug || "").toLowerCase() || products.length > 0
-  );
+  const categoryProducts = products.filter((p) => {
+    if (!slug) return true;
+    const targetSlug = slug.toLowerCase();
+    const pSlug = (p.categorySlug || "").toLowerCase();
+    const pCat = (p.category || "").toLowerCase();
+    return (
+      pSlug === targetSlug ||
+      pCat === targetSlug ||
+      pSlug.includes(targetSlug) ||
+      targetSlug.includes(pSlug)
+    );
+  });
+  const displayedProducts = categoryProducts.length > 0 ? categoryProducts : products;
 
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
@@ -112,31 +122,28 @@ export default function CategoryPage() {
               </span>
               <span>•</span>
               <span className="font-mono text-[#D6A54A] bg-[#0F2B24]/80 px-3 py-1 rounded-full border border-[#D6A54A]/25">
-                {isComboCategory
-                  ? `${comboPackages.length} Curated Rituals`
-                  : `${categoryProducts.length} Items Available`}
+                {displayedProducts.length} Items Available
               </span>
             </div>
           </div>
         </div>
 
-              {/* Content: Products */ }
-        {
-                loading?(
-          <div className = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6" >
-                    { [...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl border border-[#E7E3D8] p-4 space-y-4 animate-pulse"
-            >
-              <div className="aspect-square bg-[#F7F5ED] rounded-xl" />
-              <div className="h-4 bg-[#F7F5ED] rounded w-3/4" />
-              <div className="h-3 bg-[#F7F5ED] rounded w-1/2" />
-              <div className="h-5 bg-[#F7F5ED] rounded w-1/3" />
-            </div>
+        {/* Content: Products */}
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl border border-[#E7E3D8] p-4 space-y-4 animate-pulse"
+              >
+                <div className="aspect-square bg-[#F7F5ED] rounded-xl" />
+                <div className="h-4 bg-[#F7F5ED] rounded w-3/4" />
+                <div className="h-3 bg-[#F7F5ED] rounded w-1/2" />
+                <div className="h-5 bg-[#F7F5ED] rounded w-1/3" />
+              </div>
             ))}
           </div>
-        ) : categoryProducts.length === 0 ? (
+        ) : displayedProducts.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-[#E7E3D8] shadow-subtle space-y-4">
             <h3 className="text-base font-semibold text-[#173F35]">
               Seasonal harvest in preparation
@@ -152,11 +159,11 @@ export default function CategoryPage() {
             </Link>
           </div>
         ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {categoryProducts.map((product) => (
-                <ProductCard key={product.id || product.slug} product={product} />
-              ))}
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {displayedProducts.map((product) => (
+              <ProductCard key={product.id || product.slug} product={product} />
+            ))}
+          </div>
         )}
 
             {/* Cross-Collection Discovery */}

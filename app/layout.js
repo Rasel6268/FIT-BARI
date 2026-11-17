@@ -20,13 +20,21 @@ export const metadata = {
   description: "Fuel Your Body. Nourish Your Life. Bangladesh's premier destination for 100% authentic whey protein, raw Sundarban honey, organic chia seeds, and wholesome nutrition.",
   keywords: "gym supplements, whey protein, sundarban honey, chia seeds, rolled oats, bangladesh fitness, healthy foods, fit bari",
   authors: [{ name: "FIT BARI" }],
+  icons: {
+    icon: [
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/images/logo-icon.png", sizes: "192x192", type: "image/png" }
+    ],
+    shortcut: "/favicon.png",
+    apple: "/images/logo-icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

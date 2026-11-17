@@ -48,11 +48,12 @@ export default function MobileNavDrawer({ isOpen, onClose }) {
       <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-[#F7F5ED] shadow-elevate flex flex-col z-50 animate-slideRight overflow-y-auto">
         {/* Header */}
         <div className="p-5 border-b border-[#E7E3D8] flex items-center justify-between">
-          <Link href="/" onClick={onClose} className="flex items-baseline gap-1.5">
-            <span className="font-bold text-xl text-[#173F35] font-editorial">
-              FIT BARI
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D6A54A]" />
+          <Link href="/" onClick={onClose} className="flex items-center">
+            <img
+              src="/images/logo.png"
+              alt="FIT BARI"
+              className="h-8 sm:h-9 w-auto object-contain"
+            />
           </Link>
           <button
             onClick={onClose}
