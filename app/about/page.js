@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { FaqJsonLd } from "@/components/seo/JsonLd";
 import siteData from "@/data/site.json";
 import {
   FiChevronDown,
@@ -37,6 +38,9 @@ export default function AboutPage() {
 
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
+      {/* Schema.org FAQPage Structured Data */}
+      <FaqJsonLd faqs={faqs} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 
         {/* Breadcrumbs */}

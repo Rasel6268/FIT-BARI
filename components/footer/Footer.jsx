@@ -29,11 +29,17 @@ export default function Footer() {
 
                   {/* Column 1: Brand Narrative (4 cols) */}
                   <div className="lg:col-span-4 space-y-4 sm:space-y-5">
-                    <Link href="/" className="inline-flex items-center gap-2.5">
+                    <Link
+                      href="/"
+                      aria-label="FIT BARI Home"
+                      className="inline-flex items-center gap-2.5 group select-none"
+                    >
                       <img
                         src="/images/logo-icon.png"
                         alt="FIT BARI"
-                        className="w-8 h-8 object-contain"
+                        width={512}
+                        height={512}
+                        className="w-8 h-8 object-contain transition-transform duration-200 group-hover:scale-105"
                       />
                       <span className="text-2xl font-bold tracking-tight text-white font-editorial">
                         FIT BARI

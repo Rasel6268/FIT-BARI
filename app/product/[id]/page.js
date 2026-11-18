@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { fetchProductByIdOrSlug, fetchRelatedProducts, normalizeProduct } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { ProductJsonLd } from "@/components/seo/JsonLd";
 import { useCart } from "@/context/CartContext";
 import {
   FiStar,
@@ -156,6 +157,9 @@ export default function ProductDetailPage() {
 
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
+      {/* Schema.org Product Structured Data */}
+      <ProductJsonLd product={product} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Breadcrumbs */}

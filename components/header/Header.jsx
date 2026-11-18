@@ -100,20 +100,36 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-nowrap gap-2 xl:gap-4">
 
               {/* LEFT: Mobile Menu Button & Brand Wordmark */}
-              <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0 flex-nowrap">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 flex-shrink-0 flex-nowrap">
                 <button
                   onClick={() => setIsMobileNavOpen(true)}
-                  className="lg:hidden p-2 text-[#252A26] hover:text-[#173F35] transition-colors"
+                  className="lg:hidden p-2 -ml-1 text-[#252A26] hover:text-[#173F35] transition-colors rounded-lg hover:bg-[#173F35]/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173F35]"
                   aria-label="Open mobile menu"
                 >
                   <FiMenu size={22} />
                 </button>
 
-              <Link href="/" className="flex items-center group flex-shrink-0 flex-nowrap">
+              <Link
+                href="/"
+                aria-label="FIT BARI - Pure Nutrition"
+                className="flex items-center group flex-shrink-0 flex-nowrap select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173F35]/40 rounded-xl transition-transform duration-200"
+              >
                 <img
                   src="/images/logo.png"
                   alt="FIT BARI - Pure Nutrition"
-                  className="h-9 sm:h-10 lg:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+                  width={874}
+                  height={274}
+                  loading="eager"
+                  fetchPriority="high"
+                  className={`w-auto object-contain transition-all duration-300 group-hover:scale-[1.03] group-hover:opacity-95 ${
+                    isScrolled
+                      ? "h-8 sm:h-9 lg:h-9.5 xl:h-10"
+                      : "h-9 sm:h-10 lg:h-11 xl:h-11.5"
+                  }`}
+                  style={{
+                    aspectRatio: "874 / 274",
+                    maxHeight: "48px"
+                  }}
                 />
               </Link>
             </div>

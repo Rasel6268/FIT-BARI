@@ -48,11 +48,19 @@ export default function MobileNavDrawer({ isOpen, onClose }) {
       <div className="fixed inset-y-0 left-0 max-w-xs w-full bg-[#F7F5ED] shadow-elevate flex flex-col z-50 animate-slideRight overflow-y-auto">
         {/* Header */}
         <div className="p-5 border-b border-[#E7E3D8] flex items-center justify-between">
-          <Link href="/" onClick={onClose} className="flex items-center">
+          <Link
+            href="/"
+            onClick={onClose}
+            aria-label="FIT BARI Home"
+            className="flex items-center group select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#173F35]/40 rounded-lg"
+          >
             <img
               src="/images/logo.png"
-              alt="FIT BARI"
-              className="h-8 sm:h-9 w-auto object-contain"
+              alt="FIT BARI - Pure Nutrition"
+              width={874}
+              height={274}
+              className="h-8.5 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+              style={{ aspectRatio: "874 / 274" }}
             />
           </Link>
           <button

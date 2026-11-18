@@ -7,6 +7,7 @@ import fallbackCategories from "@/data/categories.json";
 import { fetchProducts, fetchCategories, normalizeProduct, normalizeCategory } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { CollectionJsonLd } from "@/components/seo/JsonLd";
 import { FiShield, FiShoppingBag, FiArrowRight } from "react-icons/fi";
 import { useCart } from "@/context/CartContext";
 
@@ -73,6 +74,9 @@ export default function CategoryPage() {
 
   return (
     <div className="bg-[#F7F5ED] min-h-screen py-8">
+      {/* Schema.org CollectionPage & ItemList */}
+      <CollectionJsonLd category={category} products={products} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Breadcrumbs */}
