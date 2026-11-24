@@ -1,37 +1,29 @@
 import HeroSlider from "@/components/home/HeroSlider";
-import TrustFeaturesBar from "@/components/home/TrustFeaturesBar";
 import FeaturedCategories from "@/components/home/FeaturedCategories";
 import BestSellersSection from "@/components/home/BestSellersSection";
-import EditorialPromotions from "@/components/home/EditorialPromotions";
 import ComboPackagesSection from "@/components/home/ComboPackagesSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import FitnessNutritionGuide from "@/components/home/FitnessNutritionGuide";
 import CustomerReviews from "@/components/home/CustomerReviews";
-
 
 export default function HomePage() {
   return (
     <div className="w-full space-y-0">
-      {/* 1. Hero Section – Signature Brand Editorial Split Slider */}
+      {/* 1. Hero Section */}
       <HeroSlider />
 
-      {/* 2. Trust Features Bar – Minimalist Verification & Delivery Perks */}
-      <TrustFeaturesBar />
-
-      {/* 3. Category Presentation – "Explore What Nourishes You" Magazine Spread */}
+      {/* 2. Featured Collections Carousel */}
       <FeaturedCategories />
 
-      {/* 4. Product Discovery Experience – 4 Sections: Best Sellers, Trending, New, Favorites */}
+      {/* 3. Product Discovery (Best Sellers, Trending, New, Favorites) */}
       <BestSellersSection />
-      {/* 6. Combo Collection – Restrained Bundle Shopping Experience */}
+
+      {/* 4. Curated Combo Bundles */}
       <ComboPackagesSection />
 
-      {/* 7. Trust & Brand Story – 4 Core Benefits & "Better Choices Begin at Home." */}
+      {/* 5. Trust Pillars */}
       <WhyChooseUs />
 
-
-
-      {/* 9. Social Proof – Authentic Community Words */}
+      {/* 6. Customer Reviews */}
       <CustomerReviews />
     </div>
   );

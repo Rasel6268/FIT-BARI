@@ -21,11 +21,11 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-        <footer className="bg-[#0F2B24] text-[#F7F5ED] border-t border-[#173F35] pt-16 sm:pt-20 pb-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[#0F2B24] text-[#F7F5ED] border-t border-[#173F35] pt-10 sm:pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-              {/* Main 4-Column Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-14 pb-12 sm:pb-14 border-b border-white/10">
+        {/* Main 4-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-14 pb-10 sm:pb-14 border-b border-white/10">
 
                   {/* Column 1: Brand Narrative (4 cols) */}
                   <div className="lg:col-span-4 space-y-4 sm:space-y-5">

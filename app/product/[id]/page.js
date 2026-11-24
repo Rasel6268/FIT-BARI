@@ -172,8 +172,8 @@ export default function ProductDetailPage() {
         />
 
         {/* Main Product Showcase Card */}
-        <div className="bg-white rounded-3xl border border-[#E7E3D8] p-6 sm:p-10 lg:p-12 shadow-subtle mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#E7E3D8] p-4 sm:p-10 lg:p-12 shadow-subtle mb-10 sm:mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14">
 
             {/* Gallery Column (6 cols) */}
             <div className="lg:col-span-6 space-y-4">
@@ -323,18 +323,18 @@ export default function ProductDetailPage() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 pt-2 text-[11px] text-[#777D76]">
-                  <div className="flex items-center gap-1.5">
-                    <FiShield className="text-[#829B76]" size={13} />
-                    <span>{product.certification || "Lab Verified"}</span>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-2 text-[10px] sm:text-[11px] text-[#777D76]">
+                  <div className="flex items-center gap-1 sm:gap-1.5 truncate">
+                    <FiShield className="text-[#829B76] flex-shrink-0" size={12} />
+                    <span className="truncate">{product.certification || "Lab Verified"}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <FiTruck className="text-[#829B76]" size={13} />
-                    <span>Free Above ৳2000</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 truncate">
+                    <FiTruck className="text-[#829B76] flex-shrink-0" size={12} />
+                    <span className="truncate">Free &gt; ৳2000</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <FiRefreshCw className="text-[#829B76]" size={13} />
-                    <span>7-Day Replacement</span>
+                  <div className="flex items-center gap-1 sm:gap-1.5 truncate">
+                    <FiRefreshCw className="text-[#829B76] flex-shrink-0" size={12} />
+                    <span className="truncate">7-Day Replace</span>
                   </div>
                 </div>
               </div>
@@ -471,7 +471,7 @@ export default function ProductDetailPage() {
                 View More in {product.category} &rarr;
               </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-4.5">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id || p.slug} product={p} />
               ))}

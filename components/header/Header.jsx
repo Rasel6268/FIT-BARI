@@ -200,17 +200,6 @@ export default function Header() {
                 >
                   Bundles
                 </Link>
-
-                <Link
-                  href="/about"
-                  className={`px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold tracking-wide uppercase transition-colors rounded-full whitespace-nowrap flex-shrink-0 ${pathname === "/about"
-                    ? "text-[#173F35] bg-[#173F35]/5"
-                    : "text-[#252A26] hover:text-[#173F35]"
-                    }`}
-                >
-                  Our Story
-                </Link>
-
                 <Link
                   href="/contact"
                   className={`px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold tracking-wide uppercase transition-colors rounded-full whitespace-nowrap flex-shrink-0 ${pathname === "/contact"

@@ -158,39 +158,29 @@ export default function BestSellersSection() {
 
   return (
     <div className="w-full bg-white">
-      {sections.map((section, idx) => (
-        <section
-          key={section.id}
-          className={`py-14 sm:py-18 lg:py-20 border-b border-[#E7E3D8] ${
-            idx % 2 === 1 ? "bg-[#FAF7F0]/40" : "bg-white"
-          }`}
-        >
+      {sections.map((section, idx) => {
+        return (
+          <section
+            key={section.id}
+            className={`py-8 sm:py-12 lg:py-14 border-b border-[#E7E3D8] ${
+              idx % 2 === 1 ? "bg-[#FAF7F0]/40" : "bg-white"
+            }`}
+          >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Section Header with Title, Eyebrow & View All Action */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4 pb-4 border-b border-[#E7E3D8]/80">
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#D6A54A]" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#777D76]">
-                    {section.eyebrow}
-                  </span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal font-editorial text-[#173F35] tracking-tight">
-                  {section.title}
-                </h2>
-                <p className="text-xs sm:text-sm text-[#777D76] max-w-xl leading-relaxed">
-                  {section.subtitle}
-                </p>
-              </div>
+            {/* Section Header with Title & View All Action */}
+            <div className="flex items-center justify-between mb-4 sm:mb-6 gap-3 pb-2.5 sm:pb-3 border-b border-[#E7E3D8]/80">
+              <h2 className="text-lg sm:text-2xl lg:text-3xl font-normal font-editorial text-[#173F35] tracking-tight">
+                {section.title}
+              </h2>
 
               {/* View All Button */}
               <Link
                 href={section.viewAllHref}
-                className="inline-flex items-center gap-2 h-9 px-5 rounded-full border border-[#173F35] text-[#173F35] hover:bg-[#173F35] hover:text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider transition-all duration-200 active:scale-[0.98] group flex-shrink-0 self-start sm:self-end shadow-xs"
+                className="inline-flex items-center gap-1.5 h-8 px-3.5 sm:px-4 rounded-full border border-[#173F35] text-[#173F35] hover:bg-[#173F35] hover:text-[#F7F5ED] text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 active:scale-[0.98] group flex-shrink-0"
               >
                 <span>View All</span>
                 <FiArrowRight
-                  size={13}
+                  size={12}
                   className="group-hover:translate-x-1 transition-transform duration-200"
                 />
               </Link>
@@ -198,16 +188,16 @@ export default function BestSellersSection() {
 
             {/* Product Grid */}
             {loading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {[...Array(4)].map((_, i) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-4.5">
+                {[...Array(5)].map((_, i) => (
                   <div
                     key={i}
-                    className="bg-white rounded-2xl border border-[#E7E3D8] p-4 space-y-4 animate-pulse"
+                    className="bg-white rounded-xl sm:rounded-2xl border border-[#E7E3D8] p-3 space-y-3 animate-pulse"
                   >
-                    <div className="aspect-[4/5] bg-[#F7F5ED] rounded-xl" />
-                    <div className="h-4 bg-[#F7F5ED] rounded w-3/4" />
+                    <div className="aspect-square bg-[#F7F5ED] rounded-lg" />
+                    <div className="h-3.5 bg-[#F7F5ED] rounded w-3/4" />
                     <div className="h-3 bg-[#F7F5ED] rounded w-1/2" />
-                    <div className="h-5 bg-[#F7F5ED] rounded w-1/3" />
+                    <div className="h-4 bg-[#F7F5ED] rounded w-1/3" />
                   </div>
                 ))}
               </div>
@@ -218,7 +208,7 @@ export default function BestSellersSection() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-4.5">
                 {section.items.map((product) => (
                   <ProductCard
                     key={`${section.id}-${product.id || product.slug}`}
@@ -228,32 +218,9 @@ export default function BestSellersSection() {
               </div>
             )}
           </div>
-        </section>
-      ))}
-
-      {/* Complete Catalog Footer Callout */}
-      <div className="py-12 sm:py-14 text-center bg-[#F7F5ED] border-b border-[#E7E3D8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-          <h3 className="text-xl sm:text-2xl font-editorial font-normal text-[#173F35]">
-            Looking for Our Complete Pantry Range?
-          </h3>
-          <p className="text-xs sm:text-sm text-[#777D76] max-w-md mx-auto">
-            Explore all certified raw honey, organic chia seeds, superfoods, and clean sports supplements.
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 h-11 px-8 rounded-full bg-[#173F35] text-[#F7F5ED] hover:bg-[#0F2B24] text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-sm active:scale-[0.98] group"
-            >
-              <span>Explore Complete Pantry Catalog ({products.length} Items)</span>
-              <FiArrowRight
-                size={14}
-                className="group-hover:translate-x-1 transition-transform duration-200"
-              />
-            </Link>
-          </div>
-        </div>
-      </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

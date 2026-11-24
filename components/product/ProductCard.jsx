@@ -24,12 +24,12 @@ export default function ProductCard({ product }) {
     (hasDiscount ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0);
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-[#E7E3D8] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-[#173F35]/40 hover:shadow-subtle">
-      {/* Top Image Container */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F7F5ED]">
+    <div className="group relative bg-white rounded-xl sm:rounded-2xl border border-[#E7E3D8] overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-[#173F35]/40 hover:shadow-subtle">
+      {/* Top Image Container - Compact Aspect Ratio */}
+      <div className="relative aspect-square w-full overflow-hidden bg-[#F7F5ED]">
         {/* Savings Pill */}
         {hasDiscount && (
-          <span className="absolute top-3 left-3 z-10 text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-[#173F35] text-[#F7F5ED] shadow-sm">
+          <span className="absolute top-2.5 left-2.5 z-10 text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-[#173F35] text-[#F7F5ED] shadow-sm">
             Save {discountPct}%
           </span>
         )}
@@ -40,13 +40,14 @@ export default function ProductCard({ product }) {
             e.preventDefault();
             toggleWishlist(product);
           }}
-          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#173F35] ${isWishlisted
-            ? "bg-[#173F35] text-[#D6A54A] shadow-sm"
-            : "bg-white/85 backdrop-blur-sm text-[#777D76] hover:text-[#173F35] hover:bg-white shadow-subtle"
-            }`}
+          className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#173F35] ${
+            isWishlisted
+              ? "bg-[#173F35] text-[#D6A54A] shadow-sm"
+              : "bg-white/85 backdrop-blur-sm text-[#777D76] hover:text-[#173F35] hover:bg-white shadow-subtle"
+          }`}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <FiHeart size={15} className={isWishlisted ? "fill-current" : ""} />
+          <FiHeart size={13} className={isWishlisted ? "fill-current" : ""} />
         </button>
 
         {/* Product Image */}
@@ -54,83 +55,68 @@ export default function ProductCard({ product }) {
           <img
             src={product.images?.[0] || product.image || "/images/placeholder.png"}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out editorial-img"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out editorial-img"
             loading="lazy"
           />
         </Link>
 
-        {/* Quick View Drawer on Desktop Hover */}
-        <div className="absolute inset-x-3 bottom-3 hidden sm:flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
+        {/* Quick View Button on Desktop Hover */}
+        <div className="absolute inset-x-2.5 bottom-2.5 hidden sm:flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
           <button
             onClick={() => openQuickView(product)}
-            className="flex-1 py-2 px-3 rounded-full bg-white/95 backdrop-blur-md text-[#252A26] hover:text-[#173F35] hover:bg-white text-xs font-semibold shadow-sm border border-[#E7E3D8] transition-all flex items-center justify-center gap-1.5 active:scale-95"
+            className="py-1.5 px-3 rounded-full bg-white/95 backdrop-blur-md text-[#252A26] hover:text-[#173F35] hover:bg-white text-[11px] font-semibold shadow-sm border border-[#E7E3D8] transition-all flex items-center gap-1 active:scale-95"
           >
-            <FiEye size={13} />
+            <FiEye size={12} />
             <span>Quick View</span>
-          </button>
-          <button
-            onClick={() => addToCart(product, 1)}
-            className="w-9 h-9 rounded-full bg-[#173F35] text-[#F7F5ED] hover:bg-[#0F2B24] flex items-center justify-center shadow-sm transition-all active:scale-95"
-            title="Quick Add to Cart"
-            aria-label="Quick Add to Cart"
-          >
-            <FiShoppingBag size={14} />
           </button>
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+      {/* Content Area - Clean, Compact & No Unnecessary Text */}
+      <div className="p-3 sm:p-3.5 flex-1 flex flex-col justify-between">
         <div>
           {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#777D76]">
+          <div className="flex items-center justify-between text-[10px] text-[#777D76] mb-1">
+            <span className="font-semibold uppercase tracking-wider truncate max-w-[70%]">
               {product.category}
             </span>
-            <div className="flex items-center gap-1 text-[11px] font-medium text-[#252A26]">
-              <FiStar size={11} className="text-[#D6A54A] fill-current" />
-              <span>{product.rating}</span>
-              <span className="text-[#777D76]">({product.reviewCount})</span>
-            </div>
+            {product.rating > 0 && (
+              <div className="flex items-center gap-0.5 font-medium text-[#252A26] flex-shrink-0">
+                <FiStar size={10} className="text-[#D6A54A] fill-current" />
+                <span>{product.rating}</span>
+              </div>
+            )}
           </div>
 
           {/* Product Title */}
           <Link href={`/product/${productId}`} className="block">
-            <h3 className="text-sm font-semibold text-[#252A26] hover:text-[#173F35] transition-colors line-clamp-2 leading-snug min-h-[2.5rem]">
+            <h3 className="text-xs sm:text-[13px] font-semibold text-[#252A26] hover:text-[#173F35] transition-colors line-clamp-2 leading-snug">
               {product.name}
             </h3>
           </Link>
-
-          {/* Pack info & availability */}
-          <div className="mt-2.5 flex items-center justify-between text-[11px] text-[#777D76]">
-            <span>{product.weight}</span>
-            <span className="text-[#829B76] font-medium flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#829B76]" />
-              In Stock
-            </span>
-          </div>
         </div>
 
-        {/* Pricing & Add Action */}
-        <div className="mt-4 pt-3.5 border-t border-[#E7E3D8] flex items-center justify-between gap-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-base sm:text-lg font-bold text-[#173F35]">
+        {/* Pricing & Add to Cart Action */}
+        <div className="mt-2.5 pt-2 border-t border-[#E7E3D8]/70 flex items-center justify-between gap-1.5">
+          <div className="flex items-baseline gap-1.5 min-w-0">
+            <span className="text-sm sm:text-base font-bold text-[#173F35]">
               ৳{price.toLocaleString()}
             </span>
             {hasDiscount && (
-              <span className="text-xs line-through text-[#777D76]">
+              <span className="text-[11px] line-through text-[#777D76] truncate">
                 ৳{originalPrice.toLocaleString()}
               </span>
             )}
           </div>
 
-          {/* Primary Add to Cart Button (Mobile & Desktop) */}
+          {/* Add to Cart Button */}
           <button
             onClick={() => addToCart(product, 1)}
-            className="h-8 sm:h-9 px-3 sm:px-3.5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-95 text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#173F35] focus:ring-offset-1"
+            className="h-7 sm:h-8 px-2.5 sm:px-3 rounded-full bg-[#173F35] hover:bg-[#0F2B24] active:scale-95 text-[#F7F5ED] text-[11px] font-semibold inline-flex items-center gap-1 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#173F35] flex-shrink-0"
             aria-label={`Add ${product.name} to cart`}
+            title="Add to cart"
           >
-            <FiShoppingBag size={13} />
+            <FiShoppingBag size={12} />
             <span className="hidden xs:inline">Add</span>
           </button>
         </div>

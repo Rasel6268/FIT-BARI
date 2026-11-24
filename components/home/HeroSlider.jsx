@@ -41,47 +41,50 @@ export default function HeroSlider() {
       >
         {heroSlides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="w-full py-10 sm:py-14 lg:py-16">
+            <div className="w-full py-3 sm:py-5 lg:py-12">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-10 items-center">
 
-                  {/* LEFT: Clean, uncluttered text content (5 cols) */}
-                  <div className="lg:col-span-5 space-y-4 sm:space-y-5 text-left order-2 lg:order-1">
+                  {/* LEFT: Text content (Hidden on mobile, visible on desktop lg+) */}
+                  <div className="hidden lg:block lg:col-span-5 space-y-2.5 sm:space-y-4 text-left order-2 lg:order-1">
                     {/* Small category kicker with accent dot */}
-                    <div className="inline-flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#D6A54A]" />
-                      <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#777D76]">
-                        {slide.kicker}
-                      </span>
-                    </div>
+                    {slide.kicker && (
+                      <div className="inline-flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D6A54A]" />
+                        <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase text-[#777D76]">
+                          {slide.kicker}
+                        </span>
+                      </div>
+                    )}
 
                     {/* Editorial headline */}
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-normal font-editorial leading-[1.12] tracking-tight text-[#173F35] whitespace-pre-line">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal font-editorial leading-[1.14] tracking-tight text-[#173F35] whitespace-pre-line">
                       {slide.headline}
                     </h1>
 
                     {/* Short, meaningful subtitle */}
-                    <p className="text-sm sm:text-base text-[#777D76] leading-relaxed max-w-md">
+                    <p className="text-xs sm:text-sm md:text-base text-[#777D76] leading-relaxed max-w-md line-clamp-3 sm:line-clamp-none">
                       {slide.lead}
                     </p>
 
                     {/* Single focused CTA button */}
-                    <div className="pt-2">
+                    <div className="pt-1">
                       <Link
                         href={slide.cta.href}
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow group"
+                        className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow group"
                       >
                         <span>{slide.cta.text}</span>
                         <FiArrowRight
-                          size={14}
+                          size={13}
                           className="group-hover:translate-x-1 transition-transform duration-200"
                         />
                       </Link>
                     </div>
                   </div>
 
-                  {/* RIGHT: Slide image showcase from public/images (7 cols) */}
-                  <div className="lg:col-span-7 order-1 lg:order-2">
+                  {/* RIGHT: Slide image showcase from public/images (7 cols on lg, full width on mobile) */}
+                  <div className="w-full lg:col-span-7 order-1 lg:order-2">
+                    <Link href={slide.cta.href} className="block">
                       <div className="relative aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden group">
                         <img
                           src={slide.image}
@@ -90,23 +93,24 @@ export default function HeroSlider() {
                           loading={slide.id === 1 ? "eager" : "lazy"}
                         />
                       </div>
-                    </div>
-
+                    </Link>
                   </div>
+
                 </div>
               </div>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
 
       {/* Slider Controls (Pagination Bullets & Minimal Arrows) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-2">
-        <div className="flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 sm:pb-6 pt-1 sm:pt-2">
+        <div className="flex items-center justify-center sm:justify-between">
           {/* Custom Bullet Indicators */}
           <div className="hero-custom-bullets flex items-center gap-2" />
 
-          {/* Minimalist Prev/Next Arrow Controls */}
-          <div className="flex items-center gap-2">
+          {/* Minimalist Prev/Next Arrow Controls (Hidden on mobile) */}
+          <div className="hidden sm:flex items-center gap-2">
             <button
               ref={prevRef}
               aria-label="Previous Slide"

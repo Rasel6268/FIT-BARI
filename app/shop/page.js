@@ -224,28 +224,18 @@ return (
       />
 
         {/* Editorial Page Header / Category Banner */}
-        <div className="mb-8 sm:mb-10 space-y-3">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-1.5">
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#777D76] flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D6A54A]" />
-                {currentCategoryObj
-                  ? currentCategoryObj.sublabel || "Pantry Collection"
-                  : "CURATED PANTRY CATALOG"}
-              </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-editorial text-[#173F35] tracking-tight">
+        <div className="mb-6 sm:mb-8 space-y-2">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-normal font-editorial text-[#173F35] tracking-tight">
                 {currentCategoryObj ? currentCategoryObj.name : "All Nutritional Essentials"}
               </h1>
-              <p className="text-xs sm:text-sm text-[#777D76] max-w-xl leading-relaxed">
-                {currentCategoryObj?.description ||
-                  "Every single item is single-origin or lab-verified for label claim purity. Zero artificial syrups, zero chemical fillers."}
-              </p>
             </div>
 
             {/* Total items badge */}
-            <div className="flex items-center gap-2.5 text-xs text-[#173F35] font-semibold bg-white/80 backdrop-blur-sm border border-[#E7E3D8] px-4 py-2 rounded-full self-start md:self-end">
+            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#173F35] font-semibold bg-white/80 backdrop-blur-sm border border-[#E7E3D8] px-3 sm:px-4 py-1.5 rounded-full self-start md:self-end">
               <span className="w-2 h-2 rounded-full bg-[#829B76] animate-pulse" />
-              <span>{productsData.length} Total Pantry Staples</span>
+              <span>{productsData.length} Products</span>
             </div>
           </div>
         </div>
@@ -623,7 +613,7 @@ return (
 
                                   {/* Products Listing Grid / List */}
                                   {loading ? (
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-4.5">
                                       {[...Array(6)].map((_, i) => (
                                         <div
                                           key={i}
@@ -668,7 +658,7 @@ return (
                                       </button>
                                     </div>
                                   ) : viewMode === "grid" ? (
-                                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-4.5">
                                           {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id || product.slug}
@@ -688,9 +678,9 @@ return (
                                             return (
                                               <div
                                                 key={pId}
-                                                className="bg-white rounded-2xl border border-[#E7E3D8] p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-5 hover:border-[#173F35]/40 hover:shadow-subtle transition-all duration-200"
+                                                className="bg-white rounded-xl sm:rounded-2xl border border-[#E7E3D8] p-3 sm:p-5 flex items-center gap-3.5 sm:gap-5 hover:border-[#173F35]/40 hover:shadow-subtle transition-all duration-200"
                                               >
-                                                <div className="w-full sm:w-36 aspect-square sm:aspect-square rounded-xl overflow-hidden bg-[#F7F5ED] flex-shrink-0 border border-[#E7E3D8]/80">
+                                                <div className="w-20 h-20 sm:w-32 sm:h-32 aspect-square rounded-xl overflow-hidden bg-[#F7F5ED] flex-shrink-0 border border-[#E7E3D8]/80">
                                                   <img
                                                     src={product.images?.[0] || product.image}
                                                     alt={product.name}
@@ -698,8 +688,8 @@ return (
                                                   />
                                                 </div>
 
-                                                <div className="flex-1 min-w-0 space-y-2 text-center sm:text-left">
-                                                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                                                <div className="flex-1 min-w-0 space-y-1 sm:space-y-1.5 text-left">
+                                                  <div className="flex items-center gap-2">
                                                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#777D76]">
                                                       {product.category}
                                                     </span>
@@ -711,31 +701,30 @@ return (
                                                   </div>
 
                                                   <a href={`/product/${pId}`} className="block">
-                                                    <h3 className="text-base font-semibold text-[#173F35] hover:text-[#829B76] transition-colors">
+                                                    <h3 className="text-xs sm:text-base font-semibold text-[#173F35] hover:text-[#829B76] transition-colors line-clamp-1 sm:line-clamp-2">
                                                       {product.name}
                                                     </h3>
                                                   </a>
 
-                                                  <p className="text-xs text-[#777D76] line-clamp-2">
+                                                  <p className="text-xs text-[#777D76] line-clamp-1 sm:line-clamp-2 hidden xs:block">
                                                     {product.shortDescription || product.description}
                                                   </p>
 
-                                                  <div className="flex items-center justify-center sm:justify-start gap-3 text-xs text-[#777D76]">
-                                                    <span>{product.weight || "Standard Pack"}</span>
-                                                    <span>•</span>
-                                                    <span className="text-[#829B76] font-medium">In Stock</span>
-                                                    <span>•</span>
-                                                    <span>★ {product.rating}</span>
-                                                  </div>
+                                                  {product.rating > 0 && (
+                                                    <div className="flex items-center gap-1 text-xs text-[#777D76]">
+                                                      <span className="text-[#D6A54A]">★</span>
+                                                      <span className="font-medium text-[#252A26]">{product.rating}</span>
+                                                    </div>
+                                                  )}
                                                 </div>
 
-                                                <div className="sm:border-l sm:border-[#E7E3D8] sm:pl-6 flex flex-col items-center sm:items-end gap-3 flex-shrink-0">
-                                                  <div className="text-center sm:text-right">
-                                                    <div className="text-xl font-bold text-[#173F35]">
+                                                <div className="sm:border-l sm:border-[#E7E3D8] sm:pl-5 flex flex-col items-end gap-2 sm:gap-3 flex-shrink-0 text-right">
+                                                  <div>
+                                                    <div className="text-sm sm:text-xl font-bold text-[#173F35]">
                                                       ৳{price.toLocaleString()}
                                                     </div>
                                                     {hasDiscount && (
-                                                      <div className="text-xs line-through text-[#777D76]">
+                                                      <div className="text-[10px] sm:text-xs line-through text-[#777D76]">
                                                         ৳{origPrice.toLocaleString()}
                                                       </div>
                                                     )}
@@ -743,10 +732,11 @@ return (
 
                                                   <a
                                                     href={`/product/${pId}`}
-                                                    className="h-9 px-5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-sm"
+                                                    className="h-7 sm:h-9 px-3 sm:px-5 rounded-full bg-[#173F35] hover:bg-[#0F2B24] text-[#F7F5ED] text-[11px] sm:text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-sm"
                                                   >
-                                                    <FiShoppingBag size={13} />
-                                                    <span>View Product</span>
+                                                    <FiShoppingBag size={12} />
+                                                    <span className="hidden sm:inline">View Product</span>
+                                                    <span className="sm:hidden">View</span>
                                                   </a>
                                                 </div>
                                               </div>

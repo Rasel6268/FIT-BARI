@@ -21,6 +21,8 @@ const nextConfig = {
   },
   webpack: (config, { dev }) => {
     if (dev) {
+      // Disable webpack filesystem pack cache in dev on Windows to prevent ENOENT/EPERM .pack.gz_ rename collisions
+      config.cache = false;
       // Prevents Windows filesystem race conditions and file-locking collisions (errno -4094)
       config.watchOptions = {
         poll: 1000,
