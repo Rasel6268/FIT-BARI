@@ -3,6 +3,7 @@ import FeaturedCategories from "@/components/home/FeaturedCategories";
 import BestSellersSection from "@/components/home/BestSellersSection";
 import ComboPackagesSection from "@/components/home/ComboPackagesSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
+import LabTestingSection from "@/components/home/LabTestingSection";
 import CustomerReviews from "@/components/home/CustomerReviews";
 
 export default function HomePage() {
@@ -23,7 +24,10 @@ export default function HomePage() {
       {/* 5. Trust Pillars */}
       <WhyChooseUs />
 
-      {/* 6. Customer Reviews */}
+      {/* 6. Official Laboratory Testing & Quality Assurance */}
+      <LabTestingSection />
+
+      {/* 7. Customer Reviews */}
       <CustomerReviews />
     </div>
   );

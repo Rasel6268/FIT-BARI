@@ -7,6 +7,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "cdn.fitbari.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
@@ -14,6 +22,7 @@ const nextConfig = {
         hostname: "plus.unsplash.com",
       },
       {
+        // Retained for existing legacy ImageKit URLs
         protocol: "https",
         hostname: "ik.imagekit.io",
       },

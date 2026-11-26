@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchProductByIdOrSlug, fetchRelatedProducts, normalizeProduct } from "@/lib/api";
 import ProductCard from "@/components/product/ProductCard";
+import FormattedDescription from "@/components/product/FormattedDescription";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { ProductJsonLd } from "@/components/seo/JsonLd";
 import { useCart } from "@/context/CartContext";
@@ -19,15 +20,19 @@ import {
   FiPlus,
   FiMinus,
   FiShare2,
-  FiArrowLeft
+  FiArrowLeft,
+  FiZap
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 import toast from "react-hot-toast";
+
+const WHATSAPP_NUMBER = "8801721877479";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productId = params?.id;
 
-  const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed } = useCart();
+  const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed, openCheckoutModal } = useCart();
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -92,6 +97,36 @@ export default function ProductDetailPage() {
       : product?.image
         ? [product.image]
         : ["/images/placeholder.png"];
+
+  const handleBuyNow = () => {
+    if (!product) return;
+    addToCart(product, quantity);
+    openCheckoutModal();
+  };
+
+  const handleWhatsAppOrder = () => {
+    if (!product) return;
+    const productUrl = typeof window !== "undefined" ? window.location.href : "";
+    const sku = product.sku || product.id || product.slug || "N/A";
+    const productLabel =
+      product.weight &&
+      product.weight !== "Standard Pack" &&
+      !product.name.toLowerCase().includes(product.weight.toLowerCase())
+        ? `${product.name} ${product.weight}`
+        : product.name;
+
+    const lines = [
+      "Hello! Fit Bari, I'm interested in:",
+      `Product: ${productLabel}`,
+      `Price: ${price}`,
+      ...(quantity > 1 ? [`Quantity: ${quantity}`] : []),
+      `SKU: ${sku}`,
+      `Product URL: ${productUrl}`,
+    ];
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
 
   const handleShare = () => {
     if (typeof window === "undefined") return;
@@ -323,6 +358,27 @@ export default function ProductDetailPage() {
                   </button>
                 </div>
 
+                {/* Buy Now & Order by WhatsApp */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={handleBuyNow}
+                    className="w-full py-3 px-6 rounded-full bg-[#D6A54A] hover:bg-[#C4943B] active:scale-[0.98] text-[#173F35] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+                  >
+                    <FiZap size={14} />
+                    <span>Buy Now</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppOrder}
+                    className="w-full py-3 px-6 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] active:scale-[0.98] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+                  >
+                    <FaWhatsapp size={16} />
+                    <span>Order by WhatsApp</span>
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-3 gap-1.5 sm:gap-2 pt-2 text-[10px] sm:text-[11px] text-[#777D76]">
                   <div className="flex items-center gap-1 sm:gap-1.5 truncate">
                     <FiShield className="text-[#829B76] flex-shrink-0" size={12} />
@@ -386,15 +442,35 @@ export default function ProductDetailPage() {
 
           <div className="p-6 sm:p-10">
             {activeTab === "description" && (
-              <div className="space-y-4 max-w-2xl">
-                <h3 className="text-xl font-normal font-editorial text-[#173F35]">
-                  The Craft of {product.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-[#777D76] leading-relaxed">
-                  {product.fullDescription || product.description}
-                </p>
-                <div className="mt-4 p-4 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] text-xs text-[#777D76]">
-                  Origin: <strong className="text-[#173F35]">{product.origin || "Bangladesh"}</strong>
+              <div className="space-y-6 max-w-3xl">
+                <div className="pb-3 border-b border-[#E7E3D8]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#829B76] block mb-1">
+                    Product Overview
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-normal font-editorial text-[#173F35]">
+                    The Craft of {product.name}
+                  </h3>
+                </div>
+
+                <FormattedDescription text={product.fullDescription || product.description} />
+
+                <div className="pt-4 border-t border-[#E7E3D8] grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] text-xs">
+                    <span className="text-[#777D76] block mb-0.5">Origin</span>
+                    <strong className="text-[#173F35] text-sm">{product.origin || "Bangladesh"}</strong>
+                  </div>
+                  {product.weight && (
+                    <div className="p-3.5 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] text-xs">
+                      <span className="text-[#777D76] block mb-0.5">Net Weight / Pack</span>
+                      <strong className="text-[#173F35] text-sm">{product.weight}</strong>
+                    </div>
+                  )}
+                  {product.sku && (
+                    <div className="p-3.5 rounded-2xl bg-[#F7F5ED] border border-[#E7E3D8] text-xs">
+                      <span className="text-[#777D76] block mb-0.5">SKU</span>
+                      <strong className="text-[#173F35] font-mono text-sm">{product.sku}</strong>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -428,11 +504,11 @@ export default function ProductDetailPage() {
             )}
 
             {activeTab === "usage" && (
-              <div className="space-y-4 max-w-xl">
+              <div className="space-y-4 max-w-2xl">
                 <h3 className="text-xl font-normal font-editorial text-[#173F35]">
                   Suggested Protocol
                 </h3>
-                <p className="text-xs sm:text-sm text-[#777D76] leading-relaxed">
+                <p className="text-sm text-[#3A403B] leading-7 whitespace-pre-line font-bengali">
                   {product.usageInstructions}
                 </p>
               </div>
