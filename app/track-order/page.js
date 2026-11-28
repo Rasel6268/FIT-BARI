@@ -314,7 +314,7 @@ function TrackOrderContent() {
                     </a>
                     <a
                       href={`https://wa.me/${(
-                        storeSettings?.whatsappNumber || "8801712345678"
+                        storeSettings?.whatsappNumber || "8801930214376"
                       ).replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
                         `Assalamu Alaikum, I am inquiring about my Fit Bari order #${order.orderNumber}`
                       )}`}

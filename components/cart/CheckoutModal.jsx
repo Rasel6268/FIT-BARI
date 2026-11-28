@@ -52,40 +52,61 @@ export default function CheckoutModal() {
 
   const handleWhatsAppOrder = () => {
     const whatsappDigits = (siteData.contact.whatsapp || "+8801930214376").replace(/[^0-9]/g, "");
-    const itemLines = cart
-      .map((item, idx) => {
-        const prod = item.product || item;
-        const prodPrice = Number(
-          typeof prod.price === "number"
-            ? prod.price
-            : prod.discountedPrice || prod.regularPrice || 0
-        );
-        const qty = Number(item.quantity || 1);
-        const weight = item.selectedWeight || prod.weight || "";
-        return `${idx + 1}. ${prod.name}${weight ? ` (${weight})` : ""} x ${qty} = ৳${(
-          prodPrice * qty
-        ).toLocaleString()}`;
-      })
-      .join("\n");
+    const baseUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_SITE_URL || "https://fitbari.com";
 
-    const message = [
-      "Hello FIT BARI, I would like to place an order:",
-      "",
-      itemLines,
-      "",
-      `Subtotal: ৳${cartSubtotal.toLocaleString()}`,
+    const itemEntries = cart.map((item) => {
+      const prod = item.product || item;
+      const weight = item.selectedWeight || prod.weight || "";
+      const name = prod.name || prod.title || "Fit Bari Product";
+      const productLabel =
+        weight &&
+        weight !== "Standard Pack" &&
+        weight !== "Standard" &&
+        !name.toLowerCase().includes(weight.toLowerCase())
+          ? `${name} ${weight}`
+          : name;
+      const qty = Number(item.quantity || 1);
+      const sku = prod.sku || prod.id || prod.slug || "N/A";
+      const slug = prod.slug || prod.id || prod._id || "";
+      const productUrl = slug ? `${baseUrl}/product/${slug}` : baseUrl;
+
+      return {
+        productLine: `Product: ${productLabel}${qty > 1 ? ` (x${qty})` : ""}`,
+        skuLine: `SKU: ${sku}`,
+        urlLine: `Product URL: ${productUrl}`,
+      };
+    });
+
+    const lines = [
+      "Hello! Fit Bari, I'm interested in:",
+      ...(itemEntries.length === 1
+        ? [
+            itemEntries[0].productLine,
+            `Subtotal: ৳${cartSubtotal.toLocaleString()}`,
+            itemEntries[0].skuLine,
+            itemEntries[0].urlLine,
+          ]
+        : [
+            ...itemEntries.flatMap((entry) => [
+              entry.productLine,
+              entry.skuLine,
+              entry.urlLine,
+            ]),
+            `Subtotal: ৳${cartSubtotal.toLocaleString()}`,
+          ]),
       `Delivery (${formData.city}): ${shippingCost === 0 ? "FREE" : `৳${shippingCost}`}`,
       `Total Payable: ৳${totalAmount.toLocaleString()}`,
-      formData.name ? `Name: ${formData.name.trim()}` : "",
-      formData.phone ? `Phone: ${formData.phone.trim()}` : "",
-      formData.address ? `Address: ${formData.address.trim()}` : "",
-      formData.notes ? `Note: ${formData.notes.trim()}` : "",
-    ]
-      .filter((line) => line !== "")
-      .join("\n");
+      ...(formData.name.trim() ? [`Name: ${formData.name.trim()}`] : []),
+      ...(formData.phone.trim() ? [`Phone: ${formData.phone.trim()}`] : []),
+      ...(formData.address.trim() ? [`Address: ${formData.address.trim()}`] : []),
+      ...(formData.notes.trim() ? [`Note: ${formData.notes.trim()}`] : []),
+    ];
 
     window.open(
-      `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(lines.join("\n"))}`,
       "_blank",
       "noopener,noreferrer"
     );

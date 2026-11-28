@@ -26,13 +26,22 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-const WHATSAPP_NUMBER = "8801721877479";
+const WHATSAPP_NUMBER = "8801930214376";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const productId = params?.id;
 
-  const { addToCart, toggleWishlist, isInWishlist, addToRecentlyViewed, openCheckoutModal } = useCart();
+  const {
+    addToCart,
+    toggleWishlist,
+    isInWishlist,
+    addToRecentlyViewed,
+    openCheckoutModal,
+    dhakaShipping,
+    outsideDhakaShipping,
+    freeDeliveryThreshold,
+  } = useCart();
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -115,13 +124,25 @@ export default function ProductDetailPage() {
         ? `${product.name} ${product.weight}`
         : product.name;
 
+    const subtotal = price * quantity;
+    const isFreeDelivery = subtotal >= (freeDeliveryThreshold || 2000);
+    const inDhakaRate = dhakaShipping ?? 70;
+    const outsideDhakaRate = outsideDhakaShipping ?? 130;
+
     const lines = [
       "Hello! Fit Bari, I'm interested in:",
-      `Product: ${productLabel}`,
-      `Price: ${price}`,
-      ...(quantity > 1 ? [`Quantity: ${quantity}`] : []),
+      `Product: ${productLabel}${quantity > 1 ? ` (x${quantity})` : ""}`,
+      `Subtotal: ৳${subtotal.toLocaleString()}`,
       `SKU: ${sku}`,
       `Product URL: ${productUrl}`,
+      isFreeDelivery
+        ? "Delivery: FREE"
+        : `Delivery (In Dhaka / Outside Dhaka): ৳${inDhakaRate} / ৳${outsideDhakaRate}`,
+      isFreeDelivery
+        ? `Total Payable: ৳${subtotal.toLocaleString()}`
+        : `Total Payable: ৳${(subtotal + inDhakaRate).toLocaleString()} (In Dhaka) / ৳${(
+            subtotal + outsideDhakaRate
+          ).toLocaleString()} (Outside Dhaka)`,
     ];
 
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
