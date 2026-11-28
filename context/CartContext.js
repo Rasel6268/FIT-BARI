@@ -18,10 +18,11 @@ export function CartProvider({ children }) {
     storeName: "FIT BARI",
     currencySymbol: "৳",
     freeShippingThreshold: 2000,
-    dhakaShipping: 80,
+    dhakaShipping: 70,
     outsideDhakaShipping: 130,
-    supportPhone: "01712-345678",
-    supportEmail: "support@fitbari.com",
+    supportPhone: "+880 1930214376",
+    supportEmail: "fitbari77@gmail.com",
+    whatsappNumber: "+8801930214376",
     announcements: [
       "100% Lab-Verified Single-Origin Sundarban Honey & Micro-Filtered Protein",
       "Verified batch authenticity — Inspection before payment supported nationwide",
@@ -221,12 +222,8 @@ export function CartProvider({ children }) {
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   const freeDeliveryThreshold = Number(storeSettings.freeShippingThreshold) || 2000;
-  const dhakaShipping =
-    storeSettings.dhakaShipping !== undefined ? Number(storeSettings.dhakaShipping) : 80;
-  const outsideDhakaShipping =
-    storeSettings.outsideDhakaShipping !== undefined
-      ? Number(storeSettings.outsideDhakaShipping)
-      : 130;
+  const dhakaShipping = 70;
+  const outsideDhakaShipping = 130;
 
   const freeDeliveryProgress = Math.min(
     100,

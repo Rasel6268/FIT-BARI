@@ -24,6 +24,8 @@ export default function CartPage() {
     updateQuantity,
     clearCart,
     cartSubtotal,
+    dhakaShipping,
+    outsideDhakaShipping,
     freeDeliveryProgress,
     amountNeededForFreeDelivery,
     openCheckoutModal,
@@ -51,7 +53,7 @@ export default function CartPage() {
 }
   };
 
-const shippingCost = amountNeededForFreeDelivery === 0 ? 0 : 80;
+const shippingCost = amountNeededForFreeDelivery === 0 ? 0 : dhakaShipping;
 const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
 
       return (
@@ -253,7 +255,9 @@ const finalTotal = Math.max(0, cartSubtotal - couponDiscount + shippingCost);
                                     <div className="flex justify-between text-[#777D76]">
                                       <span>Nationwide Shipping</span>
                                       <span className="font-semibold text-[#829B76]">
-                                        {shippingCost === 0 ? "FREE" : "৳80"}
+                                        {shippingCost === 0
+                                          ? "FREE"
+                                          : `৳${dhakaShipping} (Dhaka) / ৳${outsideDhakaShipping} (Outside)`}
                                       </span>
                                     </div>
 

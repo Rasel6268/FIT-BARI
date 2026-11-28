@@ -14,8 +14,7 @@ export default function AnnouncementBar() {
       ? storeSettings.announcements
       : siteData.announcementBar || [];
 
-  const hotline =
-    storeSettings?.supportPhone || siteData.contact.hotline || "+880 1712-345678";
+  const hotline = siteData.contact.hotline || "+880 1930214376";
 
   useEffect(() => {
     if (announcements.length <= 1) return;

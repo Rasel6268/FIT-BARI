@@ -13,7 +13,8 @@ import {
   FiPrinter,
   FiShoppingBag,
 } from "react-icons/fi";
-import { FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
+import { FaMoneyBillWave, FaMobileAlt, FaWhatsapp } from "react-icons/fa";
+import siteData from "@/data/site.json";
 import toast from "react-hot-toast";
 
 export default function CheckoutModal() {
@@ -32,7 +33,7 @@ export default function CheckoutModal() {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    city: "Dhaka",
+    city: "In Dhaka",
     address: "",
     notes: "",
     paymentMethod: "cod",
@@ -44,10 +45,51 @@ export default function CheckoutModal() {
 
   if (!isCheckoutModalOpen) return null;
 
-  const currentShippingRate =
-    formData.city === "Dhaka" ? dhakaShipping : outsideDhakaShipping;
+  const isInsideDhaka = formData.city === "In Dhaka";
+  const currentShippingRate = isInsideDhaka ? dhakaShipping : outsideDhakaShipping;
   const shippingCost = amountNeededForFreeDelivery === 0 ? 0 : currentShippingRate;
   const totalAmount = cartSubtotal + shippingCost;
+
+  const handleWhatsAppOrder = () => {
+    const whatsappDigits = (siteData.contact.whatsapp || "+8801930214376").replace(/[^0-9]/g, "");
+    const itemLines = cart
+      .map((item, idx) => {
+        const prod = item.product || item;
+        const prodPrice = Number(
+          typeof prod.price === "number"
+            ? prod.price
+            : prod.discountedPrice || prod.regularPrice || 0
+        );
+        const qty = Number(item.quantity || 1);
+        const weight = item.selectedWeight || prod.weight || "";
+        return `${idx + 1}. ${prod.name}${weight ? ` (${weight})` : ""} x ${qty} = ৳${(
+          prodPrice * qty
+        ).toLocaleString()}`;
+      })
+      .join("\n");
+
+    const message = [
+      "Hello FIT BARI, I would like to place an order:",
+      "",
+      itemLines,
+      "",
+      `Subtotal: ৳${cartSubtotal.toLocaleString()}`,
+      `Delivery (${formData.city}): ${shippingCost === 0 ? "FREE" : `৳${shippingCost}`}`,
+      `Total Payable: ৳${totalAmount.toLocaleString()}`,
+      formData.name ? `Name: ${formData.name.trim()}` : "",
+      formData.phone ? `Phone: ${formData.phone.trim()}` : "",
+      formData.address ? `Address: ${formData.address.trim()}` : "",
+      formData.notes ? `Note: ${formData.notes.trim()}` : "",
+    ]
+      .filter((line) => line !== "")
+      .join("\n");
+
+    window.open(
+      `https://wa.me/${whatsappDigits}?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -213,7 +255,7 @@ export default function CheckoutModal() {
                   <div className="flex justify-between">
                     <span className="text-[#777D76]">Estimated Delivery:</span>
                     <span className="font-semibold text-[#173F35]">
-                      {formData.city === "Dhaka"
+                      {formData.city === "In Dhaka"
                         ? storeSettings?.estimatedDeliveryDhaka || "12-24 Hours"
                         : storeSettings?.estimatedDeliveryOutside || "48-72 Hours"}
                     </span>
@@ -286,19 +328,15 @@ export default function CheckoutModal() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                   <div>
                     <label className="block text-xs font-semibold text-[#173F35] mb-1">
-                      City / Region *
+                      Delivery Area *
                     </label>
                     <select
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       className="w-full h-11 px-3.5 rounded-xl border border-[#E7E3D8] text-xs text-[#252A26] bg-[#F7F5ED]/40 focus:bg-white focus:border-[#173F35] outline-none transition-all font-medium"
                     >
-                      <option value="Dhaka">Dhaka (৳{dhakaShipping})</option>
-                      <option value="Chittagong">Chittagong (৳{outsideDhakaShipping})</option>
-                      <option value="Sylhet">Sylhet (৳{outsideDhakaShipping})</option>
-                      <option value="Rajshahi">Rajshahi (৳{outsideDhakaShipping})</option>
-                      <option value="Khulna">Khulna (৳{outsideDhakaShipping})</option>
-                      <option value="Other">Other Region (৳{outsideDhakaShipping})</option>
+                      <option value="In Dhaka">In Dhaka (৳{dhakaShipping})</option>
+                      <option value="Outside Dhaka">Outside Dhaka (৳{outsideDhakaShipping})</option>
                     </select>
                   </div>
 
@@ -436,6 +474,16 @@ export default function CheckoutModal() {
                       : `Confirm Order (৳${totalAmount.toLocaleString()})`}
                   </span>
                   <FiArrowRight size={14} />
+                </button>
+
+                {/* WhatsApp Order Button */}
+                <button
+                  type="button"
+                  onClick={handleWhatsAppOrder}
+                  className="w-full h-11 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/40 text-[#128C7E] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                >
+                  <FaWhatsapp size={16} />
+                  <span>Order via WhatsApp (+880 1930214376)</span>
                 </button>
               </form>
             )}

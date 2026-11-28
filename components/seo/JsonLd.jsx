@@ -17,8 +17,8 @@ export function StoreJsonLd() {
     image: `${BASE_URL}/images/honey-harvest.png`,
     description:
       "Bangladesh's premier destination for 100% authentic whey protein, raw Sundarban honey, organic chia seeds, and wholesome nutrition.",
-    telephone: "+8801712345678",
-    email: "support@fitbari.com",
+    telephone: "+8801930214376",
+    email: "fitbari77@gmail.com",
     priceRange: "৳৳",
     currenciesAccepted: "BDT",
     paymentAccepted: "Cash, bKash, Nagad",
@@ -58,7 +58,7 @@ export function StoreJsonLd() {
     sameAs: [
       "https://facebook.com/fitbari",
       "https://instagram.com/fitbari",
-      "https://wa.me/8801712345678",
+      "https://wa.me/8801930214376",
     ],
   };
 

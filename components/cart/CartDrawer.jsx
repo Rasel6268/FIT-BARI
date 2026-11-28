@@ -22,6 +22,8 @@ export default function CartDrawer() {
     removeFromCart,
     updateQuantity,
     cartSubtotal,
+    dhakaShipping,
+    outsideDhakaShipping,
     freeDeliveryThreshold,
     freeDeliveryProgress,
     amountNeededForFreeDelivery,
@@ -195,13 +197,15 @@ export default function CartDrawer() {
                 <div className="flex justify-between text-[#777D76]">
                   <span>Nationwide Shipping</span>
                   <span className="font-semibold text-[#829B76]">
-                    {amountNeededForFreeDelivery === 0 ? "FREE" : "৳80 (Dhaka) / ৳130 (Outside)"}
+                    {amountNeededForFreeDelivery === 0
+                      ? "FREE"
+                      : `৳${dhakaShipping} (Dhaka) / ৳${outsideDhakaShipping} (Outside)`}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-bold text-[#173F35] pt-2 border-t border-[#E7E3D8]">
                   <span>Estimated Total</span>
                   <span className="text-base text-[#173F35]">
-                    ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : 80)).toLocaleString()}
+                    ৳{(cartSubtotal + (amountNeededForFreeDelivery === 0 ? 0 : dhakaShipping)).toLocaleString()}
                   </span>
                 </div>
               </div>

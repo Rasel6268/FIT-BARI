@@ -70,11 +70,14 @@ export default function ContactPage() {
                             <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#777D76]">
                               Hotline
                             </h4>
-                              <p className="text-sm font-semibold text-[#173F35]">
+                              <a
+                                href={`tel:${siteData.contact.hotline.replace(/\s+/g, "")}`}
+                                className="text-sm font-semibold text-[#173F35] hover:underline block"
+                              >
                                 {siteData.contact.hotline}
-                              </p>
-                                <p className="text-xs text-[#777D76]">
-                                  {siteData.contact.phone}
+                              </a>
+                                <p className="text-[11px] text-[#777D76]">
+                                  Call us for orders &amp; support
                                 </p>
                               </div>
 
